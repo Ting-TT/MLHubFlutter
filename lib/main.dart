@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+  WindowManager.instance.setMinimumSize(const Size(700, 500));
   runApp(MyApp());
 }
 
@@ -43,6 +47,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Navigation buttons in the sidebar
     List<Widget> buttons = [
       ListTile(
         leading: Icon(Icons.home),
@@ -58,9 +63,10 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 
     buttons.add(
       Visibility(
-        visible: isNLPExpanded, // Control visibility based on `isNLPExpanded`
+        visible: isNLPExpanded,
         child: ListTile(
-          contentPadding: EdgeInsets.only(left: 32), // Add indentation
+          // Add indentation to represent "Transcribe" is a sub button under NLP
+          contentPadding: EdgeInsets.only(left: 32),
           leading: Icon(Icons.transcribe),
           title: Text('Transcribe'),
           onTap: () => onDestinationSelected(2),
@@ -70,9 +76,10 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 
     buttons.add(
       Visibility(
-        visible: isNLPExpanded, // Control visibility based on `isNLPExpanded`
+        visible: isNLPExpanded,
         child: ListTile(
-          contentPadding: EdgeInsets.only(left: 32), // Add indentation
+          // Add indentation to represent "Translate" is a sub button under NLP
+          contentPadding: EdgeInsets.only(left: 32),
           leading: Icon(Icons.translate),
           title: Text('Translate'),
           onTap: () => onDestinationSelected(3),
@@ -99,9 +106,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
           ),
           Expanded(
             child: Container(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: getPage(),
-                ),
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: getPage(),
+            ),
           ),
         ],
       ),
@@ -112,7 +119,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     switch (selectedIndex) {
       case 0:
         return IntroductionPage();
-      // case 1: NLP button is clicked and sub buttons are shown, no need to show any page
+      // case 1: NLP button is clicked and sub buttons are shown/hidden, 
+      // no need to show any page
       case 2: // Transcribe
         return TranscribePage();
       case 3: // Translate
@@ -125,7 +133,6 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
   }
 }
 
-
 class IntroductionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -135,11 +142,94 @@ class IntroductionPage extends StatelessWidget {
   }
 }
 
-class TranscribePage extends StatelessWidget {
+class TranscribePage extends StatefulWidget {
+  @override
+  _TranscribePageState createState() => _TranscribePageState();
+}
+
+class _TranscribePageState extends State<TranscribePage> {
+  String outputText = "";
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Transcribe Page'),
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Text('Models available:', style: TextStyle(fontSize: 18)),
+          SizedBox(height: 8.0),
+          Wrap(
+            spacing: 8.0, // Space between buttons
+            // Buttons for different models
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  // TODO: Implement OpenAI model functionality
+                },
+                child: Text('OpenAI'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // TODO: Implement Azure model functionality
+                },
+                child: Text('Azure'),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0),
+          Row(children: [
+            Text('Drop your file here:', style: TextStyle(fontSize: 18)),
+            SizedBox(width: 10.0),
+            ElevatedButton(
+              onPressed: () {
+                // TODO: Implement save functionality
+              },
+              child: Text('Run'),
+            ),
+          ]),
+          SizedBox(height: 8.0),
+          Container(
+            height: 150.0,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(4.0),
+              color: Colors.grey[200],
+            ),
+            child: DragTarget(
+              onAccept: (data) {
+                // TODO: Handle file dropped
+              },
+              builder: (_, __, ___) {
+                return Center(
+                  child: Text('Drag and drop area',
+                      style: TextStyle(color: Colors.grey)),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 16.0),
+          Row(children: [
+            Text('Output:', style: TextStyle(fontSize: 18)),
+            SizedBox(width: 10.0),
+            ElevatedButton(
+              onPressed: () {
+                // TODO: Implement save functionality
+              },
+              child: Text('Save'),
+            ),
+          ]),
+          SizedBox(height: 8.0),
+          TextFormField(
+            initialValue: outputText,
+            readOnly: true,
+            maxLines: null, // TODO: Set max lines as needed
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
