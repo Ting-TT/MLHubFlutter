@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
+import 'transcribe.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,11 +54,17 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         leading: Icon(Icons.home),
         title: Text('Home'),
         onTap: () => onDestinationSelected(0),
+        selected: selectedIndex == 0,
+        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedColor: Theme.of(context).colorScheme.primary,
       ),
       ListTile(
         leading: Icon(Icons.language),
         title: Text('NLP'),
         onTap: () => onDestinationSelected(1),
+        selected: selectedIndex == 1,
+        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedColor: Theme.of(context).colorScheme.primary,
       ),
     ];
 
@@ -70,6 +77,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
           leading: Icon(Icons.transcribe),
           title: Text('Transcribe'),
           onTap: () => onDestinationSelected(2),
+          selected: selectedIndex == 2,
+          selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          selectedColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -83,6 +93,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
           leading: Icon(Icons.translate),
           title: Text('Translate'),
           onTap: () => onDestinationSelected(3),
+          selected: selectedIndex == 3,
+          selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          selectedColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
@@ -92,6 +105,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         leading: Icon(Icons.visibility),
         title: Text('Computer Vision'),
         onTap: () => onDestinationSelected(4),
+        selected: selectedIndex == 4,
+        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedColor: Theme.of(context).colorScheme.primary,
       ),
     );
 
@@ -119,8 +135,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     switch (selectedIndex) {
       case 0:
         return IntroductionPage();
-      // case 1: NLP button is clicked and sub buttons are shown/hidden, 
-      // no need to show any page
+      // Case 1: NLP button is clicked and sub buttons are shown/hidden, 
+      // no need to show any page.
       case 2: // Transcribe
         return TranscribePage();
       case 3: // Translate
@@ -138,98 +154,6 @@ class IntroductionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text('Welcome to MLHub Flutter App'),
-    );
-  }
-}
-
-class TranscribePage extends StatefulWidget {
-  @override
-  _TranscribePageState createState() => _TranscribePageState();
-}
-
-class _TranscribePageState extends State<TranscribePage> {
-  String outputText = "";
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text('Models available:', style: TextStyle(fontSize: 18)),
-          SizedBox(height: 8.0),
-          Wrap(
-            spacing: 8.0, // Space between buttons
-            // Buttons for different models
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Implement OpenAI model functionality
-                },
-                child: Text('OpenAI'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Implement Azure model functionality
-                },
-                child: Text('Azure'),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.0),
-          Row(children: [
-            Text('Drop your file here:', style: TextStyle(fontSize: 18)),
-            SizedBox(width: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                // TODO: Implement save functionality
-              },
-              child: Text('Run'),
-            ),
-          ]),
-          SizedBox(height: 8.0),
-          Container(
-            height: 150.0,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(4.0),
-              color: Colors.grey[200],
-            ),
-            child: DragTarget(
-              onAccept: (data) {
-                // TODO: Handle file dropped
-              },
-              builder: (_, __, ___) {
-                return Center(
-                  child: Text('Drag and drop area',
-                      style: TextStyle(color: Colors.grey)),
-                );
-              },
-            ),
-          ),
-          SizedBox(height: 16.0),
-          Row(children: [
-            Text('Output:', style: TextStyle(fontSize: 18)),
-            SizedBox(width: 10.0),
-            ElevatedButton(
-              onPressed: () {
-                // TODO: Implement save functionality
-              },
-              child: Text('Save'),
-            ),
-          ]),
-          SizedBox(height: 8.0),
-          TextFormField(
-            initialValue: outputText,
-            readOnly: true,
-            maxLines: null, // TODO: Set max lines as needed
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
