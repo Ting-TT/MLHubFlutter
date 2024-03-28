@@ -13,7 +13,7 @@ Future<void> runExternalCommand() async {
 
     // Start the process with the specified environment
     var process = await Process.start(
-      '/bin/zsh',
+      '/bin/sh',
       ['-c', 'ml transcribe openai harvard.wav -l en 2>&1'], // 2>&1: Redirect stderr to stdout
       environment: environmentVars, // Set environment variables here
       runInShell: true, // Consider if you need to run in a shell
