@@ -15,11 +15,18 @@ dependencies:
 
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+
+  # To make InheritedWidget easier to use and more reusable.
   provider: ^6.1.2
+
+  # For fixing the size of the desktop app window.
   window_manager:
     git:
       url: https://github.com/leanflutter/window_manager.git
       ref: main
+  
+  # For drag and drop file functionality.
+  desktop_drop: ^0.4.4
 
 dev_dependencies:
   flutter_test:
