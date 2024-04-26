@@ -25,8 +25,14 @@ dependencies:
       url: https://github.com/leanflutter/window_manager.git
       ref: main
   
+  # For choosing the input audio language option.
+  dropdown_search: ^5.0.6
+
   # For drag and drop file functionality.
   desktop_drop: ^0.4.4
+
+  # For choosing the file from local.
+  file_picker: ^8.0.0+1
 
 dev_dependencies:
   flutter_test:

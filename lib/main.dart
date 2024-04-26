@@ -32,16 +32,16 @@ class MLHubMainPage extends StatefulWidget {
 
 class _MLHubMainPageState extends State<MLHubMainPage> {
   var selectedIndex = 0;
-  bool isNLPExpanded = false;
+  bool isLanguageExpanded = false;
 
   void onDestinationSelected(int index) {
     setState(() {
       selectedIndex = index;
-      if ((index == 1 && !isNLPExpanded) || index == 2 || index == 3) {
-        // Assuming "NLP" is at index 1, and its children are at 2 and 3
-        isNLPExpanded = true;
+      if ((index == 1 && !isLanguageExpanded) || index == 2 || index == 3) {
+        // Assuming "Language" is at index 1, and its children are at 2 and 3
+        isLanguageExpanded = true;
       } else {
-        isNLPExpanded = false;
+        isLanguageExpanded = false;
       }
     });
   }
@@ -60,7 +60,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       ),
       ListTile(
         leading: Icon(Icons.language),
-        title: Text('NLP'),
+        title: Text('Language'),
         onTap: () => onDestinationSelected(1),
         selected: selectedIndex == 1,
         selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
@@ -70,9 +70,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 
     buttons.add(
       Visibility(
-        visible: isNLPExpanded,
+        visible: isLanguageExpanded,
         child: ListTile(
-          // Add indentation to represent "Transcribe" is a sub button under NLP
+          // Add indentation to represent "Transcribe" is a sub button under Language
           contentPadding: EdgeInsets.only(left: 32),
           leading: Icon(Icons.transcribe),
           title: Text('Transcribe'),
@@ -86,9 +86,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 
     buttons.add(
       Visibility(
-        visible: isNLPExpanded,
+        visible: isLanguageExpanded,
         child: ListTile(
-          // Add indentation to represent "Translate" is a sub button under NLP
+          // Add indentation to represent "Translate" is a sub button under Language
           contentPadding: EdgeInsets.only(left: 32),
           leading: Icon(Icons.translate),
           title: Text('Translate'),
@@ -103,7 +103,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     buttons.add(
       ListTile(
         leading: Icon(Icons.visibility),
-        title: Text('Computer Vision'),
+        title: Text('Vision'),
         onTap: () => onDestinationSelected(4),
         selected: selectedIndex == 4,
         selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
@@ -135,7 +135,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     switch (selectedIndex) {
       case 0:
         return IntroductionPage();
-      // Case 1: NLP button is clicked and sub buttons are shown/hidden, 
+      // Case 1: Language button is clicked and sub buttons are shown/hidden, 
       // no need to show any page.
       case 2: // Transcribe
         return TranscribePage();
