@@ -34,6 +34,9 @@ dependencies:
   # For choosing the file from local.
   file_picker: ^8.0.0+1
 
+  # For detecting the input file type.
+  mime: ^1.0.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
