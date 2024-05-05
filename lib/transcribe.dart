@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:desktop_drop/desktop_drop.dart';
 import 'package:cross_file/cross_file.dart';
+import 'package:desktop_drop/desktop_drop.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:mime/mime.dart';
+import 'package:path/path.dart' as Path;
 
 List<String> languageOptions = [
   "Not specified",
@@ -208,7 +209,9 @@ class _TranscribePageState extends State<TranscribePage> {
         SizedBox(height: 5.0),
         DropdownSearch<String>(
           popupProps: PopupProps.menu(
+            showSearchBox: true,
             showSelectedItems: true,
+            searchDelay: Duration(seconds: 0),
           ),
           items: languageOptions,
           onChanged: (value) {
@@ -285,9 +288,7 @@ class _TranscribePageState extends State<TranscribePage> {
           Text('Output:', style: TextStyle(fontSize: 18)),
           SizedBox(width: 10.0),
           ElevatedButton(
-            onPressed: () {
-              // TODO: Implement save functionality
-            },
+            onPressed: saveToFile,
             child: Text('Save'),
           ),
         ]),
@@ -398,6 +399,50 @@ class _TranscribePageState extends State<TranscribePage> {
     } catch (e) {
       setState(() => _outputController.text = 'Error: $e');
       debugPrint('An error occurred while running the process: $e');
+    }
+  }
+
+  Future<void> saveToFile() async {
+    if (_outputController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No output to save.')),
+      );
+      return;
+    }
+
+    String defaultFileName = Path.basenameWithoutExtension(_droppedFiles.first.path) + ".$selectedFormat";
+    String initialDirectory = Path.dirname(_droppedFiles.first.path);
+
+    String? path = await FilePicker.platform.saveFile(
+      dialogTitle: 'Save your file',
+      fileName: defaultFileName,
+      initialDirectory: initialDirectory,
+      type: FileType.custom,
+      allowedExtensions: [selectedFormat],
+    );
+
+    if (path != null) {
+      File file = File(path);
+      try {
+        await file.writeAsString(_outputController.text);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('File saved to $path')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to save file: $e')),
+          );
+        }
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('File save failed.')),
+        );
+      }
     }
   }
 
