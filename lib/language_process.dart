@@ -112,12 +112,19 @@ List<String> languageOptions = [
   "Yoruba"
 ];
 
-class TranscribePage extends StatefulWidget {
+// Define an enum to differentiate the modes
+enum ProcessType { transcribe, translate }
+
+class LanguageProcessPage extends StatefulWidget {
+  final ProcessType processType;
+
+  LanguageProcessPage({Key? key, required this.processType}) : super(key: key);
+
   @override
-  _TranscribePageState createState() => _TranscribePageState();
+  _LanguageProcessPageState createState() => _LanguageProcessPageState();
 }
 
-class _TranscribePageState extends State<TranscribePage> {
+class _LanguageProcessPageState extends State<LanguageProcessPage> {
   String? selectedModel = 'OpenAI'; // Set the default model to 'OpenAI'
   String selectedFormat = 'txt';
   String? selectedLanguage = 'Not specified';
@@ -206,7 +213,7 @@ class _TranscribePageState extends State<TranscribePage> {
                 child: Text(format),
               ),
           ],
-        ),
+        ), 
         SizedBox(height: 16.0),
 
         // Language of the input audio file
@@ -380,8 +387,8 @@ class _TranscribePageState extends State<TranscribePage> {
           (selectedLanguage != null && selectedLanguage != 'Not specified')
               ? '-l $selectedLanguage'
               : '';
-      var command =
-          'ml transcribe openai "$escapedFilePath" $languageCommand $formatCommand 2>&1';
+      String operation = widget.processType == ProcessType.transcribe ? 'transcribe' : 'translate';
+      var command = 'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand 2>&1';
       
       _runningProcess = await Process.start(
         '/bin/sh',

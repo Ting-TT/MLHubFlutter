@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
-import 'transcribe.dart';
+import 'language_process.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -158,12 +158,17 @@ class IntroductionPage extends StatelessWidget {
   }
 }
 
+class TranscribePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return LanguageProcessPage(processType: ProcessType.transcribe);
+  }
+}
+
 class TranslatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Translate Page'),
-    );
+    return LanguageProcessPage(processType: ProcessType.translate);
   }
 }
 
