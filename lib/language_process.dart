@@ -8,110 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as Path;
 
-List<String> languageOptions = [
-  "Not specified",
-  "Afrikaans",
-  "Albanian",
-  "Amharic",
-  "Arabic",
-  "Armenian",
-  "Assamese",
-  "Azerbaijani",
-  "Bashkir",
-  "Basque",
-  "Belarusian",
-  "Bengali",
-  "Bosnian",
-  "Breton",
-  "Bulgarian",
-  "Cantonese",
-  "Catalan",
-  "Chinese",
-  "Croatian",
-  "Czech",
-  "Danish",
-  "Dutch",
-  "English",
-  "Estonian",
-  "Faroese",
-  "Finnish",
-  "French",
-  "Galician",
-  "Georgian",
-  "German",
-  "Greek",
-  "Gujarati",
-  "Haitian creole",
-  "Hausa",
-  "Hawaiian",
-  "Hebrew",
-  "Hindi",
-  "Hungarian",
-  "Icelandic",
-  "Indonesian",
-  "Italian",
-  "Japanese",
-  "Javanese",
-  "Kannada",
-  "Kazakh",
-  "Khmer",
-  "Korean",
-  "Lao",
-  "Latin",
-  "Latvian",
-  "Lingala",
-  "Lithuanian",
-  "Luxembourgish",
-  "Macedonian",
-  "Malagasy",
-  "Malay",
-  "Malayalam",
-  "Maltese",
-  "Maori",
-  "Marathi",
-  "Mongolian",
-  "Myanmar",
-  "Nepali",
-  "Norwegian",
-  "Nynorsk",
-  "Occitan",
-  "Pashto",
-  "Persian",
-  "Polish",
-  "Portuguese",
-  "Punjabi",
-  "Romanian",
-  "Russian",
-  "Sanskrit",
-  "Serbian",
-  "Shona",
-  "Sindhi",
-  "Sinhala",
-  "Slovak",
-  "Slovenian",
-  "Somali",
-  "Spanish",
-  "Sundanese",
-  "Swahili",
-  "Swedish",
-  "Tagalog",
-  "Tajik",
-  "Tamil",
-  "Tatar",
-  "Telugu",
-  "Thai",
-  "Tibetan",
-  "Turkish",
-  "Turkmen",
-  "Ukrainian",
-  "Urdu",
-  "Uzbek",
-  "Vietnamese",
-  "Welsh",
-  "Yiddish",
-  "Yoruba"
-];
-
 // Define an enum to differentiate the modes
 enum ProcessType { transcribe, translate }
 
@@ -125,15 +21,36 @@ class LanguageProcessPage extends StatefulWidget {
 }
 
 class _LanguageProcessPageState extends State<LanguageProcessPage> {
+  List<String> inputLanguageOptions = ['Not specified'];
+  List<String> translationOutputLanguageOptions = ['English']; // Currently, only English is supported because only 'OpenAI' is implemented
   String? selectedModel = 'OpenAI'; // Set the default model to 'OpenAI'
   String selectedFormat = 'txt';
-  String? selectedLanguage = 'Not specified';
+  String? selectedInputLanguage = 'Not specified';
+  String? selectedOutputLanguage = 'English';
   String outputText = '';
   bool _isRunning = false; // Track whether the command is running
   bool _cancelled = false; // Track whether the command is cancelled
   Process? _runningProcess; // Control the process running
   List<XFile> _droppedFiles = []; // Store the paths of dropped files
   final TextEditingController _outputController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSupportedLanguages();
+  }
+
+  Future<void> fetchSupportedLanguages() async {
+    var result = await Process.run('ml', ['supported', 'openai']);
+    if (result.exitCode == 0) {
+      var languages = LineSplitter.split(result.stdout.toString()).toList();
+      if (mounted) { // Check if the widget is still in the widget tree
+        setState(() {
+          inputLanguageOptions.addAll(languages);
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -216,22 +133,65 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
         ), 
         SizedBox(height: 16.0),
 
-        // Language of the input audio file
-        Text('Input Language:', style: TextStyle(fontSize: 18)),
-        SizedBox(height: 5.0),
-        DropdownSearch<String>(
-          popupProps: PopupProps.menu(
-            showSearchBox: true,
-            showSelectedItems: true,
-            searchDelay: Duration(seconds: 0),
-          ),
-          items: languageOptions,
-          onChanged: (value) {
-            setState(() {
-              selectedLanguage = value;
-            });
-          },
-          selectedItem: "Not specified",
+        // Language options
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                // Language of the input audio file
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Input Language:', style: TextStyle(fontSize: 18)),
+                  SizedBox(height: 5.0),
+                  DropdownSearch<String>(
+                    popupProps: PopupProps.menu(
+                      showSearchBox: true,
+                      showSelectedItems: true,
+                      searchDelay: Duration(seconds: 0),
+                    ),
+                    items: inputLanguageOptions,
+                    onChanged: (value) {
+                      if (mounted) {
+                        setState(() {
+                          selectedInputLanguage = value;
+                        });
+                      }
+                    },
+                    selectedItem: "Not specified",
+                  ),
+                ],
+              ),
+            ),
+            // Output language for the translation task
+            if (widget.processType == ProcessType.translate) ...[
+              SizedBox(width: 20.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Output Language:', style: TextStyle(fontSize: 18)),
+                    SizedBox(height: 5.0),
+                    DropdownSearch<String>(
+                      popupProps: PopupProps.menu(
+                        showSearchBox: true,
+                        showSelectedItems: true,
+                        searchDelay: Duration(seconds: 0),
+                      ),
+                      items: translationOutputLanguageOptions,
+                      onChanged: (value) {
+                        if (mounted) {
+                          setState(() {
+                            selectedOutputLanguage = value;
+                          });
+                        }
+                      },
+                      selectedItem: selectedOutputLanguage,
+                    ),
+                  ],
+                ),
+              ),
+            ]
+          ],
         ),
         SizedBox(height: 20.0),
 
@@ -267,24 +227,20 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
           ),
           child: DropTarget(
             onDragDone: (detail) {
-              setState(() {
-                // Clear the list of previously dropped files
-                _droppedFiles.clear();
-                if (detail.files.isNotEmpty) {
-                  // Add only the most recent file
-                  _droppedFiles.add(detail.files.last);
-                }
+              if (mounted) {
+                setState(() {
+                  // Clear the list of previously dropped files
+                  _droppedFiles.clear();
+                  if (detail.files.isNotEmpty) {
+                    // Add only the most recent file
+                    _droppedFiles.add(detail.files.last);
+                  }
 
-                // Update the outputText to reflect the newly dropped file
-                outputText = 'Selected file:\n' +
-                    _droppedFiles.map((file) => file.path).join('\n');
-              });
-            },
-            onDragEntered: (detail) {
-              setState(() {});
-            },
-            onDragExited: (detail) {
-              setState(() {});
+                  // Update the outputText to reflect the newly dropped file
+                  outputText = 'Selected file:\n' +
+                      _droppedFiles.map((file) => file.path).join('\n');
+                });
+              }
             },
             child: Center(
               child: _droppedFiles.isEmpty
@@ -341,12 +297,14 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      setState(() {
-        _droppedFiles.clear(); // Clear previous files
-        _droppedFiles.add(XFile(result.files.single.path!));
-        outputText = 'Selected file:\n' +
-            _droppedFiles.map((file) => file.path).join('\n');
-      });
+      if (mounted) {
+        setState(() {
+          _droppedFiles.clear(); // Clear previous files
+          _droppedFiles.add(XFile(result.files.single.path!));
+          outputText = 'Selected file:\n' +
+              _droppedFiles.map((file) => file.path).join('\n');
+        });
+      }
     }
   }
 
@@ -356,19 +314,20 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
       var mimeType = lookupMimeType(_droppedFiles.first.path);
 
       // Check if the file type is audio or video
-      if (mimeType != null &&
-          (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
-        setState(() => _isRunning = true);
+      if (mimeType != null && (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
+        if (mounted) {setState(() => _isRunning = true);}
         runExternalCommand(_droppedFiles.first.path).then((_) {
           // Set _isRunning to false when the command finishes
-          setState(() => _isRunning = false);
+          if (mounted) {setState(() => _isRunning = false);}
         });
       } else {
         // Update UI with error message if file is not audio/video
-        setState(() {
-          _outputController.text =
-              "Input file doesn't look like an audio or video file, please check the input file type.";
-        });
+        if (mounted) {
+          setState(() {
+            _outputController.text =
+                "Input file doesn't look like an audio or video file, please check the input file type.";
+          });
+        }
       }
     }
   }
@@ -384,8 +343,8 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
       String formatCommand =
           selectedFormat == 'txt' ? '' : '-f $selectedFormat';
       String languageCommand =
-          (selectedLanguage != null && selectedLanguage != 'Not specified')
-              ? '-l $selectedLanguage'
+          (selectedInputLanguage != null && selectedInputLanguage != 'Not specified')
+              ? '-l $selectedInputLanguage'
               : '';
       String operation = widget.processType == ProcessType.transcribe ? 'transcribe' : 'translate';
       var command = 'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand 2>&1';
@@ -403,13 +362,14 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
         if (_cancelled) break;  // Stop processing if cancelled
         completeOutput += output;
       }
-      setState(() {
-          _outputController.text = completeOutput.trim();  
-      });
+      if (mounted) {
+        setState(() {
+            _outputController.text = completeOutput.trim();  
+        });
+      }
       debugPrint(completeOutput.trim());
-
     } catch (e) {
-      setState(() => _outputController.text = 'Error: $e');
+      if (mounted) {setState(() => _outputController.text = 'Error: $e');}
       debugPrint('An error occurred while running the process: $e');
     }
   }
@@ -483,10 +443,12 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     if (_runningProcess != null) {
       _cancelled = true;  // Set the cancellation flag
       _runningProcess!.kill(ProcessSignal.sigint);
-      setState(() {
-        _isRunning = false;
-        _outputController.text = 'Operation cancelled.';
-      });
+      if (mounted) {
+        setState(() {
+          _isRunning = false;
+          _outputController.text = 'Operation cancelled.';
+        });
+      }
     }
   }
 }
