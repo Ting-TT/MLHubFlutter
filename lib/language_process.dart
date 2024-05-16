@@ -1,5 +1,6 @@
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
+import 'log.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -95,18 +96,18 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
               child: Text('OpenAI'),
             ),
             ElevatedButton(
-              onPressed: () => setState(() => selectedModel = 'Azure'),
+              onPressed: null, // Disabled button for Azure
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    selectedModel == 'Azure' ? Colors.purple[100] : null,
+                backgroundColor: Colors.grey, // Set a disabled color
+                foregroundColor: Colors.black45, // Text color for disabled state
               ),
               child: Text('Azure'),
             ),
             ElevatedButton(
-              onPressed: () => setState(() => selectedModel = 'Google'),
+              onPressed: null, // Disabled button for Google
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    selectedModel == 'Google' ? Colors.purple[100] : null,
+                backgroundColor: Colors.grey, // Set a disabled color
+                foregroundColor: Colors.black45, // Text color for disabled state
               ),
               child: Text('Google'),
             ),
@@ -355,6 +356,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
         runInShell: true,
       );
       debugPrint('Command: $command');
+      LogManager.instance.log('Command: $command');
 
       // Capture the stdout and trim it to remove leading/trailing whitespace.
       String completeOutput = "";
@@ -368,6 +370,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
         });
       }
       debugPrint(completeOutput.trim());
+      LogManager.instance.log('Output: $completeOutput');
     } catch (e) {
       if (mounted) {setState(() => _outputController.text = 'Error: $e');}
       debugPrint('An error occurred while running the process: $e');

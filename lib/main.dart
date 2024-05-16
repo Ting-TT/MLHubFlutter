@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
 import 'language_process.dart';
+import 'log.dart';
+import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +35,20 @@ class MLHubMainPage extends StatefulWidget {
 class _MLHubMainPageState extends State<MLHubMainPage> {
   var selectedIndex = 0;
   bool isLanguageExpanded = false;
+  String _appVersion = 'Unknown'; 
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = packageInfo.version; // Set app version from package info
+    });
+  }
 
   void onDestinationSelected(int index) {
     setState(() {
@@ -49,7 +65,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
   @override
   Widget build(BuildContext context) {
     // Navigation buttons in the sidebar
-    List<Widget> buttons = [
+    List<Widget> mainButtons = [
       ListTile(
         leading: Icon(Icons.home),
         title: Text('Home'),
@@ -68,7 +84,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       ),
     ];
 
-    buttons.add(
+    mainButtons.add(
       Visibility(
         visible: isLanguageExpanded,
         child: ListTile(
@@ -84,7 +100,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       ),
     );
 
-    buttons.add(
+    mainButtons.add(
       Visibility(
         visible: isLanguageExpanded,
         child: ListTile(
@@ -100,7 +116,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       ),
     );
 
-    buttons.add(
+    mainButtons.add(
       ListTile(
         leading: Icon(Icons.visibility),
         title: Text('Vision'),
@@ -111,6 +127,20 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       ),
     );
 
+    Widget logButton = ListTile(
+      leading: Icon(Icons.list_alt),
+      title: Text('Log'),
+      onTap: () => onDestinationSelected(5),
+      selected: selectedIndex == 5,
+      selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+      selectedColor: Theme.of(context).colorScheme.primary,
+    );
+
+     Widget versionLabel = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text('Version: $_appVersion', style: TextStyle(color: Colors.grey)),
+    );
+
     double sidebarWidth = 180; // Sidebar width
 
     return Scaffold(
@@ -118,7 +148,13 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         children: [
           Container(
             width: sidebarWidth,
-            child: ListView(children: buttons),
+            child: Column(
+              children: [
+                Expanded(child: ListView(children: mainButtons)),
+                logButton, // This will always be at the bottom
+                versionLabel,
+              ],
+            ),
           ),
           Expanded(
             child: Container(
@@ -143,6 +179,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         return TranslatePage();
       case 4: // Computer Vision
         return ComputerVisionPage();
+      case 5: // Log
+        return LogPage();
       default:
         return IntroductionPage();
     }

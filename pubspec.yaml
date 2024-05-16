@@ -37,6 +37,9 @@ dependencies:
   # For detecting the input file type.
   mime: ^1.0.5
 
+  # For querying the version number of the app.
+  package_info_plus: ^5.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
