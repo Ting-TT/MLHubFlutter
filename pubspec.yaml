@@ -40,10 +40,16 @@ dependencies:
   # For querying the version number of the app.
   package_info_plus: ^5.0.1
 
+  # For keeping track of the commands to write on the log page.
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  riverpod_generator: ^2.3.5
+  riverpod_lint: ^2.3.2
 
 # The following section is specific to Flutter packages.
 flutter:

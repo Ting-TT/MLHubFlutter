@@ -6,8 +6,115 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as Path;
+
+// The list of languages supported by Whisper for the input audio file.
+// Referred to the LANGUAGES from https://github.com/openai/whisper/blob/main/whisper/tokenizer.py
+List<String> inputLanguageOptions = [
+  "Not specified",
+  "Afrikaans",
+  "Albanian",
+  "Amharic",
+  "Arabic",
+  "Armenian",
+  "Assamese",
+  "Azerbaijani",
+  "Bashkir",
+  "Basque",
+  "Belarusian",
+  "Bengali",
+  "Bosnian",
+  "Breton",
+  "Bulgarian",
+  "Cantonese",
+  "Catalan",
+  "Chinese",
+  "Croatian",
+  "Czech",
+  "Danish",
+  "Dutch",
+  "English",
+  "Estonian",
+  "Faroese",
+  "Finnish",
+  "French",
+  "Galician",
+  "Georgian",
+  "German",
+  "Greek",
+  "Gujarati",
+  "Haitian creole",
+  "Hausa",
+  "Hawaiian",
+  "Hebrew",
+  "Hindi",
+  "Hungarian",
+  "Icelandic",
+  "Indonesian",
+  "Italian",
+  "Japanese",
+  "Javanese",
+  "Kannada",
+  "Kazakh",
+  "Khmer",
+  "Korean",
+  "Lao",
+  "Latin",
+  "Latvian",
+  "Lingala",
+  "Lithuanian",
+  "Luxembourgish",
+  "Macedonian",
+  "Malagasy",
+  "Malay",
+  "Malayalam",
+  "Maltese",
+  "Maori",
+  "Marathi",
+  "Mongolian",
+  "Myanmar",
+  "Nepali",
+  "Norwegian",
+  "Nynorsk",
+  "Occitan",
+  "Pashto",
+  "Persian",
+  "Polish",
+  "Portuguese",
+  "Punjabi",
+  "Romanian",
+  "Russian",
+  "Sanskrit",
+  "Serbian",
+  "Shona",
+  "Sindhi",
+  "Sinhala",
+  "Slovak",
+  "Slovenian",
+  "Somali",
+  "Spanish",
+  "Sundanese",
+  "Swahili",
+  "Swedish",
+  "Tagalog",
+  "Tajik",
+  "Tamil",
+  "Tatar",
+  "Telugu",
+  "Thai",
+  "Tibetan",
+  "Turkish",
+  "Turkmen",
+  "Ukrainian",
+  "Urdu",
+  "Uzbek",
+  "Vietnamese",
+  "Welsh",
+  "Yiddish",
+  "Yoruba"
+];
 
 // Define an enum to differentiate the modes
 enum ProcessType { transcribe, translate }
@@ -22,7 +129,6 @@ class LanguageProcessPage extends StatefulWidget {
 }
 
 class _LanguageProcessPageState extends State<LanguageProcessPage> {
-  List<String> inputLanguageOptions = ['Not specified'];
   List<String> translationOutputLanguageOptions = ['English']; // Currently, only English is supported because only 'OpenAI' is implemented
   String? selectedModel = 'OpenAI'; // Set the default model to 'OpenAI'
   String selectedFormat = 'txt';
@@ -35,23 +141,30 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
   List<XFile> _droppedFiles = []; // Store the paths of dropped files
   final TextEditingController _outputController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    fetchSupportedLanguages();
-  }
+  // Commented out fetchSupportedLanguages() function which fetches the list 
+  // inputLanguageOptions using "ml supported openai" command and will get the 
+  // most update-to-date version of what languages Whisper supports. 
+  // However, this function is commented out because it takes quite a few 
+  // seconds to load the language list on the UI, so now we are back to use a 
+  // predefined inputLanguageOptions list instead.
 
-  Future<void> fetchSupportedLanguages() async {
-    var result = await Process.run('ml', ['supported', 'openai']);
-    if (result.exitCode == 0) {
-      var languages = LineSplitter.split(result.stdout.toString()).toList();
-      if (mounted) { // Check if the widget is still in the widget tree
-        setState(() {
-          inputLanguageOptions.addAll(languages);
-        });
-      }
-    }
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchSupportedLanguages();
+  // }
+
+  // Future<void> fetchSupportedLanguages() async {
+  //   var result = await Process.run('ml', ['supported', 'openai']);
+  //   if (result.exitCode == 0) {
+  //     var languages = LineSplitter.split(result.stdout.toString()).toList();
+  //     if (mounted) { // Check if the widget is still in the widget tree
+  //       setState(() {
+  //         inputLanguageOptions.addAll(languages);
+  //       });
+  //     }
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -63,20 +176,24 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('Building with _isRunning: $_isRunning');
-    return Container(
-      child: Stack(
-        children: <Widget>[
-          Padding(
-              padding: EdgeInsets.all(16.0),
-              child: buildMainContent(),  // Apply padding only to main content
+    return Consumer(
+      builder: (context, ref, child) {
+        return Container(
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: buildMainContent(ref), // Apply padding only to main content
+              ),
+              if (_isRunning) buildOverlay(ref), // Present a processing page
+            ],
           ),
-          if (_isRunning) buildOverlay(), // Present a processing page
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget buildMainContent() {
+  Widget buildMainContent(WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -213,7 +330,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
           SizedBox(width: 10.0),
           // Run button
           ElevatedButton(
-            onPressed: _runOrNot,
+            onPressed:  () => _runOrNot(ref),
             child: _isRunning ? Text('Running') : Text('Run'),
           ),
         ]),
@@ -309,7 +426,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     }
   }
 
-  void _runOrNot() {
+  void _runOrNot(WidgetRef ref) {
     if (_droppedFiles.isNotEmpty && !_isRunning) {
       // Check MIME type
       var mimeType = lookupMimeType(_droppedFiles.first.path);
@@ -317,7 +434,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
       // Check if the file type is audio or video
       if (mimeType != null && (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
         if (mounted) {setState(() => _isRunning = true);}
-        runExternalCommand(_droppedFiles.first.path).then((_) {
+        runExternalCommand(_droppedFiles.first.path, ref).then((_) {
           // Set _isRunning to false when the command finishes
           if (mounted) {setState(() => _isRunning = false);}
         });
@@ -333,7 +450,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     }
   }
 
-  Future<void> runExternalCommand(String filePath) async {
+  Future<void> runExternalCommand(String filePath, WidgetRef ref) async {
     _cancelled = false;  // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
@@ -348,7 +465,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
               ? '-l $selectedInputLanguage'
               : '';
       String operation = widget.processType == ProcessType.transcribe ? 'transcribe' : 'translate';
-      var command = 'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand 2>&1';
+      var command = 'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
       
       _runningProcess = await Process.start(
         '/bin/sh',
@@ -356,7 +473,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
         runInShell: true,
       );
       debugPrint('Command: $command');
-      LogManager.instance.log('Command: $command');
+      updateLog(ref, "Command executed:\n$command");
 
       // Capture the stdout and trim it to remove leading/trailing whitespace.
       String completeOutput = "";
@@ -364,13 +481,14 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
         if (_cancelled) break;  // Stop processing if cancelled
         completeOutput += output;
       }
+      if (_cancelled) return;
       if (mounted) {
         setState(() {
             _outputController.text = completeOutput.trim();  
         });
       }
       debugPrint(completeOutput.trim());
-      LogManager.instance.log('Output: $completeOutput');
+      updateLog(ref, "Output:\n$completeOutput");
     } catch (e) {
       if (mounted) {setState(() => _outputController.text = 'Error: $e');}
       debugPrint('An error occurred while running the process: $e');
@@ -421,7 +539,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     }
   }
 
-  Widget buildOverlay() {
+  Widget buildOverlay(WidgetRef ref) {
     return Positioned.fill(
       child: Container(
         color: Colors.white60, // Semi-transparent overlay
@@ -433,7 +551,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
             Text('Processing...', style: TextStyle(color: Colors.black, fontSize: 18)),
             SizedBox(height: 24),
             ElevatedButton(
-              onPressed: cancelOperation, // Implement this method to handle cancel
+              onPressed: () => cancelOperation(ref), // Implement this method to handle cancel
               child: Text('Cancel'),
             ),
           ],
@@ -442,10 +560,11 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     );
   }
 
-  void cancelOperation() {
+  void cancelOperation(WidgetRef ref) {
     if (_runningProcess != null) {
       _cancelled = true;  // Set the cancellation flag
       _runningProcess!.kill(ProcessSignal.sigint);
+      updateLog(ref, "Operation cancelled.");
       if (mounted) {
         setState(() {
           _isRunning = false;

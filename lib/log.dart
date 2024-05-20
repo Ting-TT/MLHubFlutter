@@ -1,70 +1,55 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LogManager {
-  LogManager._privateConstructor() {
-    _logController.add(List.from(_logMessages)); // Send initial log messages
-    debugPrint('Initial log messages added: $_logMessages');
-  }
+final logProvider = StateProvider<List<String>>((ref) => []);
 
-  static final LogManager _instance = LogManager._privateConstructor();
-  static LogManager get instance => _instance;
-
-  final _logController = StreamController<List<String>>.broadcast();
-  List<String> _logMessages = [];
-
-  Stream<List<String>> get logs => _logController.stream;
-
-  void log(String message) {
-    _logMessages.add(message);
-    debugPrint('Logging message: $message');
-    _logController.add(List.from(_logMessages));
-    debugPrint('logMessages: $_logMessages');
-  }
-
-  void clearLogs() {
-    _logMessages.clear();
-    _logController.add(List.from(_logMessages));
-  }
+void updateLog(WidgetRef ref, String message) {
+  ref.read(logProvider.notifier).update((state) => [...state, message]);
 }
 
-class LogPage extends StatefulWidget {
+class LogPage extends ConsumerStatefulWidget {
   @override
   _LogPageState createState() => _LogPageState();
 }
 
-class _LogPageState extends State<LogPage> {
-  @override
-  void initState() {
-    super.initState();
-    // Adding some initial logs for testing
-    LogManager.instance.log('Initial log');
-    LogManager.instance.log('Another log');
-  }
+class _LogPageState extends ConsumerState<LogPage> {
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<String>>(
-      stream: LogManager.instance.logs,
-      builder: (context, snapshot) {
-        debugPrint('Stream builder rebuilt with data: ${snapshot.data}');
-        
-        // Show a loading indicator while waiting for data
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) => ListTile(
-              title: Text(snapshot.data![index]),
+    final logs = ref.watch(logProvider);
+
+    // Automatically scroll to the bottom of the log list
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          // Schedule a callback for after the build phase, ensuring the ListView has been built
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+
+    return Scaffold(
+      body: Container(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: logs.isEmpty
+          ? Center(child: Text('No logs available'))
+          : ListView.builder(
+              controller: _scrollController,
+              itemCount: logs.length,
+              itemBuilder: (context, index) => ListTile(
+                title: Text(logs[index], style: TextStyle(fontFamily: 'Monospace')),
+              ),
             ),
-          );
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          return Center(child: Text('No logs available'));
-        }
-      },
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }

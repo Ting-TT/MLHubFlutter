@@ -1,6 +1,7 @@
 import 'language_process.dart';
 import 'log.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -8,11 +9,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   WindowManager.instance.setMinimumSize(const Size(700, 500));
-  runApp(MyApp());
+  runApp(ProviderScope(child: MLHubApp())); // Wrap with ProviderScope
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MLHubApp extends StatelessWidget {
+  const MLHubApp({super.key});
 
   @override
   Widget build(BuildContext context) {
