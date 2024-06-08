@@ -119,6 +119,9 @@ List<String> inputLanguageOptions = [
 // Define an enum to differentiate the modes
 enum ProcessType { transcribe, translate }
 
+// Flag to track if a process is running
+bool isProcessRunning = false;
+
 class LanguageProcessPage extends StatefulWidget {
   final ProcessType processType;
 
@@ -451,7 +454,12 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
   }
 
   Future<void> runExternalCommand(String filePath, WidgetRef ref) async {
-    _cancelled = false;  // Reset the cancellation flag
+    if (isProcessRunning) {
+      debugPrint('A process is already running. Please wait until it finishes.');
+      return; // Prevent a new process if one is already running
+    }
+    isProcessRunning = true;  // Mark that a process is now running
+   _cancelled = false;  // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
       String escapedFilePath = filePath.replaceAll(' ', '\\ ');
@@ -492,6 +500,10 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     } catch (e) {
       if (mounted) {setState(() => _outputController.text = 'Error: $e');}
       debugPrint('An error occurred while running the process: $e');
+    } finally {
+      // Ensure _runningProcess is cleared and mark that no process is running
+      _runningProcess = null;
+      isProcessRunning = false;
     }
   }
 
@@ -564,13 +576,33 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     if (_runningProcess != null) {
       _cancelled = true;  // Set the cancellation flag
       _runningProcess!.kill(ProcessSignal.sigint);
-      updateLog(ref, "Operation cancelled.");
-      if (mounted) {
-        setState(() {
-          _isRunning = false;
-          _outputController.text = 'Operation cancelled.';
-        });
-      }
+
+
+      // Wait for the process to terminate
+      _runningProcess!.exitCode.then((_) {
+        if (mounted) {
+          setState(() {
+            // Reset the UI and flags only after the process has actually terminated
+            _isRunning = false;
+            isProcessRunning = false;
+            _outputController.text = 'Operation cancelled.';
+            _runningProcess = null;
+          });
+          debugPrint("Process successfully cancelled.");
+          updateLog(ref, "Operation cancelled.");
+        }
+      }).catchError((error) {
+        if (mounted) {
+          setState(() {
+            _outputController.text = 'Error cancelling the operation: $error';
+            // Ensure flags are reset even if there's an error
+            _isRunning = false;
+            isProcessRunning = false;
+            _runningProcess = null;
+          });
+        }
+      });
     }
   }
+
 }
