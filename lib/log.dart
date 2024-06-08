@@ -9,7 +9,7 @@ void updateLog(WidgetRef ref, String message, {bool includeTimestamp = false}) {
   if (includeTimestamp) {
     final now = DateTime.now();
     String timeStamp = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
-    logMessage = "[$timeStamp]\n$message";
+    logMessage = "---[$timeStamp]\n $message";
   }
   ref.read(logProvider.notifier).update((state) => [...state, logMessage]);
 }
@@ -35,10 +35,21 @@ class _LogPageState extends ConsumerState<LogPage> {
               : ListView.builder(
                   controller: _scrollController,
                   itemCount: logs.length,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(logs[index],
-                        style: TextStyle(fontFamily: 'Monospace')),
-                  ),
+                  itemBuilder: (context, index) {
+                    // Check for the separator marker in the log entry
+                    bool hasTimestamp = logs[index].startsWith("---");
+                    return Column(
+                      children: <Widget>[
+                        if (hasTimestamp) Divider(color: Colors.grey),  // Insert a Divider if the log has a timestamp
+                        ListTile(
+                          title: Text(
+                            logs[index].replaceAll("---", ""),  // Remove the separator marker when displaying
+                            style: TextStyle(fontFamily: 'Monospace')
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
         ),
       ),
@@ -51,3 +62,4 @@ class _LogPageState extends ConsumerState<LogPage> {
     super.dispose();
   }
 }
+
