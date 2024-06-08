@@ -19,30 +19,21 @@ class _LogPageState extends ConsumerState<LogPage> {
   Widget build(BuildContext context) {
     final logs = ref.watch(logProvider);
 
-    // Automatically scroll to the bottom of the log list
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          // Schedule a callback for after the build phase, ensuring the ListView has been built
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
-
     return Scaffold(
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
-        child: logs.isEmpty
-          ? Center(child: Text('No logs available'))
-          : ListView.builder(
-              controller: _scrollController,
-              itemCount: logs.length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(logs[index], style: TextStyle(fontFamily: 'Monospace')),
-              ),
-            ),
+        child: SelectionArea(
+          child: logs.isEmpty
+              ? Center(child: Text('No logs available'))
+              : ListView.builder(
+                  controller: _scrollController,
+                  itemCount: logs.length,
+                  itemBuilder: (context, index) => ListTile(
+                    title: Text(logs[index],
+                        style: TextStyle(fontFamily: 'Monospace')),
+                  ),
+                ),
+        ),
       ),
     );
   }
