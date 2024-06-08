@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final logProvider = StateProvider<List<String>>((ref) => []);
 
 void updateLog(WidgetRef ref, String message) {
-  ref.read(logProvider.notifier).update((state) => [...state, message]);
+  final timeStamp = DateTime.now();
+  String logMessage = "$timeStamp $message";
+  ref.read(logProvider.notifier).update((state) => [...state, logMessage]);
 }
 
 class LogPage extends ConsumerStatefulWidget {
