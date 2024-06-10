@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:mlhub_flutter/utils/save_file.dart';
 
 final logProvider = StateProvider<List<String>>((ref) => []);
 
@@ -9,7 +10,7 @@ void updateLog(WidgetRef ref, String message, {bool includeTimestamp = false}) {
   if (includeTimestamp) {
     final now = DateTime.now();
     String timeStamp = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
-    logMessage = "---[$timeStamp]\n $message";
+    logMessage = "---[$timeStamp]\n$message";
   }
   ref.read(logProvider.notifier).update((state) => [...state, logMessage]);
 }
@@ -53,6 +54,20 @@ class _LogPageState extends ConsumerState<LogPage> {
                 ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          String result = await saveToFile(
+              content: ref.read(logProvider).join('\n'),
+              defaultFileName:
+                  'mlflutter_log_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.txt');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+          }
+        },
+        tooltip: 'Save Logs',
+        child: Icon(Icons.save),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -62,4 +77,3 @@ class _LogPageState extends ConsumerState<LogPage> {
     super.dispose();
   }
 }
-

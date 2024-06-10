@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mime/mime.dart';
+import 'package:mlhub_flutter/utils/save_file.dart';
 import 'package:path/path.dart' as Path;
 
 // The list of languages supported by Whisper for the input audio file.
@@ -374,7 +375,24 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
           Text('Output:', style: TextStyle(fontSize: 18)),
           SizedBox(width: 10.0),
           ElevatedButton(
-            onPressed: saveToFile,
+            onPressed: () async {
+              if (_outputController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('No output to save.'))
+                );
+                return;
+              }
+              String defaultFileName = Path.basenameWithoutExtension(_droppedFiles.first.path) + ".$selectedFormat";
+              String initialDirectory = Path.dirname(_droppedFiles.first.path);
+              String result = await saveToFile(
+                content: _outputController.text,
+                defaultFileName: defaultFileName,
+                initialDirectory: initialDirectory
+              );
+              if (mounted) {  // Check if the widget is still mounted
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+              }
+            },
             child: Text('Save'),
           ),
         ]),
@@ -492,50 +510,6 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
     } catch (e) {
       if (mounted) {setState(() => _outputController.text = 'Error: $e');}
       debugPrint('An error occurred while running the process: $e');
-    }
-  }
-
-  Future<void> saveToFile() async {
-    if (_outputController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No output to save.')),
-      );
-      return;
-    }
-
-    String defaultFileName = Path.basenameWithoutExtension(_droppedFiles.first.path) + ".$selectedFormat";
-    String initialDirectory = Path.dirname(_droppedFiles.first.path);
-
-    String? path = await FilePicker.platform.saveFile(
-      dialogTitle: 'Save your file',
-      fileName: defaultFileName,
-      initialDirectory: initialDirectory,
-      type: FileType.custom,
-      allowedExtensions: [selectedFormat],
-    );
-
-    if (path != null) {
-      File file = File(path);
-      try {
-        await file.writeAsString(_outputController.text);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('File saved to $path')),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to save file: $e')),
-          );
-        }
-      }
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('File save failed.')),
-        );
-      }
     }
   }
 
