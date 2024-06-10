@@ -21,7 +21,6 @@ class LogPage extends ConsumerStatefulWidget {
 }
 
 class _LogPageState extends ConsumerState<LogPage> {
-  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,6 @@ class _LogPageState extends ConsumerState<LogPage> {
           child: logs.isEmpty
               ? Center(child: Text('No logs available'))
               : ListView.builder(
-                  controller: _scrollController,
                   itemCount: logs.length,
                   itemBuilder: (context, index) {
                     // Check for the separator marker in the log entry
@@ -69,11 +67,5 @@ class _LogPageState extends ConsumerState<LogPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }
