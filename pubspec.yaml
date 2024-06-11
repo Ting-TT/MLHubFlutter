@@ -26,12 +26,20 @@ dependencies:
       url: https://github.com/leanflutter/window_manager.git
       ref: main
 
+  cross_file: any
+  path: any
 dev_dependencies:
-  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
   riverpod_generator: ^2.3.5
-  riverpod_lint: ^2.3.2
+  # riverpod_lint: ^2.3.2
+
+  custom_lint: ^0.6.4
+  dart_code_metrics:
+    git:
+      url: https://github.com/Zheyuan-Robert-Xu/dart-code-metrics.git
+      ref: master
+  flutter_lints: ^4.0.0
 
 # The following section is specific to Flutter packages.
 flutter:

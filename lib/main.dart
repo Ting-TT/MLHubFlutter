@@ -36,7 +36,7 @@ class MLHubMainPage extends StatefulWidget {
 class _MLHubMainPageState extends State<MLHubMainPage> {
   var selectedIndex = 0;
   bool isLanguageExpanded = false;
-  String _appVersion = 'Unknown'; 
+  String _appVersion = 'Unknown';
 
   @override
   void initState() {
@@ -72,7 +72,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         title: Text('Home'),
         onTap: () => onDestinationSelected(0),
         selected: selectedIndex == 0,
-        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
         selectedColor: Theme.of(context).colorScheme.primary,
       ),
       ListTile(
@@ -80,7 +81,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         title: Text('Language'),
         onTap: () => onDestinationSelected(1),
         selected: selectedIndex == 1,
-        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
         selectedColor: Theme.of(context).colorScheme.primary,
       ),
     ];
@@ -95,7 +97,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
           title: Text('Transcribe'),
           onTap: () => onDestinationSelected(2),
           selected: selectedIndex == 2,
-          selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          selectedTileColor:
+              Theme.of(context).colorScheme.primary.withOpacity(0.1),
           selectedColor: Theme.of(context).colorScheme.primary,
         ),
       ),
@@ -111,7 +114,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
           title: Text('Translate'),
           onTap: () => onDestinationSelected(3),
           selected: selectedIndex == 3,
-          selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          selectedTileColor:
+              Theme.of(context).colorScheme.primary.withOpacity(0.1),
           selectedColor: Theme.of(context).colorScheme.primary,
         ),
       ),
@@ -123,7 +127,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         title: Text('Vision'),
         onTap: () => onDestinationSelected(4),
         selected: selectedIndex == 4,
-        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
         selectedColor: Theme.of(context).colorScheme.primary,
       ),
     );
@@ -137,9 +142,10 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       selectedColor: Theme.of(context).colorScheme.primary,
     );
 
-     Widget versionLabel = Padding(
+    Widget versionLabel = Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text('Version: $_appVersion', style: TextStyle(color: Colors.grey)),
+      child:
+          Text('Version: $_appVersion', style: TextStyle(color: Colors.grey)),
     );
 
     double sidebarWidth = 180; // Sidebar width
@@ -147,7 +153,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     return Scaffold(
       body: Row(
         children: [
-          Container(
+          SizedBox(
             width: sidebarWidth,
             child: Column(
               children: [
@@ -172,7 +178,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     switch (selectedIndex) {
       case 0:
         return IntroductionPage();
-      // Case 1: Language button is clicked and sub buttons are shown/hidden, 
+      // Case 1: Language button is clicked and sub buttons are shown/hidden,
       // no need to show any page.
       case 2: // Transcribe
         return TranscribePage();

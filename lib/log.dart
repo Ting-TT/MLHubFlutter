@@ -35,14 +35,15 @@ class _LogPageState extends ConsumerState<LogPage> {
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
         child: logs.isEmpty
-          ? Center(child: Text('No logs available'))
-          : ListView.builder(
-              controller: _scrollController,
-              itemCount: logs.length,
-              itemBuilder: (context, index) => ListTile(
-                title: Text(logs[index], style: TextStyle(fontFamily: 'Monospace')),
+            ? Center(child: Text('No logs available'))
+            : ListView.builder(
+                controller: _scrollController,
+                itemCount: logs.length,
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(logs[index],
+                      style: TextStyle(fontFamily: 'Monospace')),
+                ),
               ),
-            ),
       ),
     );
   }

@@ -129,7 +129,9 @@ class LanguageProcessPage extends StatefulWidget {
 }
 
 class _LanguageProcessPageState extends State<LanguageProcessPage> {
-  List<String> translationOutputLanguageOptions = ['English']; // Currently, only English is supported because only 'OpenAI' is implemented
+  List<String> translationOutputLanguageOptions = [
+    'English'
+  ]; // Currently, only English is supported because only 'OpenAI' is implemented
   String? selectedModel = 'OpenAI'; // Set the default model to 'OpenAI'
   String selectedFormat = 'txt';
   String? selectedInputLanguage = 'Not specified';
@@ -138,14 +140,14 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
   bool _isRunning = false; // Track whether the command is running
   bool _cancelled = false; // Track whether the command is cancelled
   Process? _runningProcess; // Control the process running
-  List<XFile> _droppedFiles = []; // Store the paths of dropped files
+  final List<XFile> _droppedFiles = []; // Store the paths of dropped files
   final TextEditingController _outputController = TextEditingController();
 
-  // Commented out fetchSupportedLanguages() function which fetches the list 
-  // inputLanguageOptions using "ml supported openai" command and will get the 
-  // most update-to-date version of what languages Whisper supports. 
-  // However, this function is commented out because it takes quite a few 
-  // seconds to load the language list on the UI, so now we are back to use a 
+  // Commented out fetchSupportedLanguages() function which fetches the list
+  // inputLanguageOptions using "ml supported openai" command and will get the
+  // most update-to-date version of what languages Whisper supports.
+  // However, this function is commented out because it takes quite a few
+  // seconds to load the language list on the UI, so now we are back to use a
   // predefined inputLanguageOptions list instead.
 
   // @override
@@ -183,7 +185,8 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(16.0),
-                child: buildMainContent(ref), // Apply padding only to main content
+                child:
+                    buildMainContent(ref), // Apply padding only to main content
               ),
               if (_isRunning) buildOverlay(ref), // Present a processing page
             ],
@@ -216,7 +219,8 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
               onPressed: null, // Disabled button for Azure
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey, // Set a disabled color
-                foregroundColor: Colors.black45, // Text color for disabled state
+                foregroundColor:
+                    Colors.black45, // Text color for disabled state
               ),
               child: Text('Azure'),
             ),
@@ -224,7 +228,8 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
               onPressed: null, // Disabled button for Google
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey, // Set a disabled color
-                foregroundColor: Colors.black45, // Text color for disabled state
+                foregroundColor:
+                    Colors.black45, // Text color for disabled state
               ),
               child: Text('Google'),
             ),
@@ -248,7 +253,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
                 child: Text(format),
               ),
           ],
-        ), 
+        ),
         SizedBox(height: 16.0),
 
         // Language options
@@ -318,7 +323,6 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
           SizedBox(width: 10.0),
           ElevatedButton(
             onPressed: _pickFile,
-            child: Text('Choose File'),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 // Square button
@@ -326,11 +330,12 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
               ),
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
+            child: Text('Choose File'),
           ),
           SizedBox(width: 10.0),
           // Run button
           ElevatedButton(
-            onPressed:  () => _runOrNot(ref),
+            onPressed: () => _runOrNot(ref),
             child: _isRunning ? Text('Running') : Text('Run'),
           ),
         ]),
@@ -355,8 +360,8 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
                   }
 
                   // Update the outputText to reflect the newly dropped file
-                  outputText = 'Selected file:\n' +
-                      _droppedFiles.map((file) => file.path).join('\n');
+                  outputText =
+                      'Selected file:\n${_droppedFiles.map((file) => file.path).join('\n')}';
                 });
               }
             },
@@ -419,8 +424,8 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
         setState(() {
           _droppedFiles.clear(); // Clear previous files
           _droppedFiles.add(XFile(result.files.single.path!));
-          outputText = 'Selected file:\n' +
-              _droppedFiles.map((file) => file.path).join('\n');
+          outputText =
+              'Selected file:\n${_droppedFiles.map((file) => file.path).join('\n')}';
         });
       }
     }
@@ -432,11 +437,16 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
       var mimeType = lookupMimeType(_droppedFiles.first.path);
 
       // Check if the file type is audio or video
-      if (mimeType != null && (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
-        if (mounted) {setState(() => _isRunning = true);}
+      if (mimeType != null &&
+          (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
+        if (mounted) {
+          setState(() => _isRunning = true);
+        }
         runExternalCommand(_droppedFiles.first.path, ref).then((_) {
           // Set _isRunning to false when the command finishes
-          if (mounted) {setState(() => _isRunning = false);}
+          if (mounted) {
+            setState(() => _isRunning = false);
+          }
         });
       } else {
         // Update UI with error message if file is not audio/video
@@ -451,7 +461,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
   }
 
   Future<void> runExternalCommand(String filePath, WidgetRef ref) async {
-    _cancelled = false;  // Reset the cancellation flag
+    _cancelled = false; // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
       String escapedFilePath = filePath.replaceAll(' ', '\\ ');
@@ -460,13 +470,16 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
       // one sentence per line which is more desired than whisper txt format.
       String formatCommand =
           selectedFormat == 'txt' ? '' : '-f $selectedFormat';
-      String languageCommand =
-          (selectedInputLanguage != null && selectedInputLanguage != 'Not specified')
-              ? '-l $selectedInputLanguage'
-              : '';
-      String operation = widget.processType == ProcessType.transcribe ? 'transcribe' : 'translate';
-      var command = 'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
-      
+      String languageCommand = (selectedInputLanguage != null &&
+              selectedInputLanguage != 'Not specified')
+          ? '-l $selectedInputLanguage'
+          : '';
+      String operation = widget.processType == ProcessType.transcribe
+          ? 'transcribe'
+          : 'translate';
+      var command =
+          'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
+
       _runningProcess = await Process.start(
         '/bin/sh',
         ['-c', command],
@@ -477,20 +490,23 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
 
       // Capture the stdout and trim it to remove leading/trailing whitespace.
       String completeOutput = "";
-      await for (var output in _runningProcess!.stdout.transform(utf8.decoder)) {
-        if (_cancelled) break;  // Stop processing if cancelled
+      await for (var output
+          in _runningProcess!.stdout.transform(utf8.decoder)) {
+        if (_cancelled) break; // Stop processing if cancelled
         completeOutput += output;
       }
       if (_cancelled) return;
       if (mounted) {
         setState(() {
-            _outputController.text = completeOutput.trim();  
+          _outputController.text = completeOutput.trim();
         });
       }
       debugPrint(completeOutput.trim());
       updateLog(ref, "Output:\n$completeOutput");
     } catch (e) {
-      if (mounted) {setState(() => _outputController.text = 'Error: $e');}
+      if (mounted) {
+        setState(() => _outputController.text = 'Error: $e');
+      }
       debugPrint('An error occurred while running the process: $e');
     }
   }
@@ -503,7 +519,8 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
       return;
     }
 
-    String defaultFileName = Path.basenameWithoutExtension(_droppedFiles.first.path) + ".$selectedFormat";
+    String defaultFileName =
+        "${Path.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat";
     String initialDirectory = Path.dirname(_droppedFiles.first.path);
 
     String? path = await FilePicker.platform.saveFile(
@@ -548,10 +565,12 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
           children: <Widget>[
             CircularProgressIndicator(),
             SizedBox(height: 24),
-            Text('Processing...', style: TextStyle(color: Colors.black, fontSize: 18)),
+            Text('Processing...',
+                style: TextStyle(color: Colors.black, fontSize: 18)),
             SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () => cancelOperation(ref), // Implement this method to handle cancel
+              onPressed: () => cancelOperation(
+                  ref), // Implement this method to handle cancel
               child: Text('Cancel'),
             ),
           ],
@@ -562,7 +581,7 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
 
   void cancelOperation(WidgetRef ref) {
     if (_runningProcess != null) {
-      _cancelled = true;  // Set the cancellation flag
+      _cancelled = true; // Set the cancellation flag
       _runningProcess!.kill(ProcessSignal.sigint);
       updateLog(ref, "Operation cancelled.");
       if (mounted) {
