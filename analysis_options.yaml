@@ -1,11 +1,55 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  plugins:
+    - custom_lint
+
+dart_code_metrics:
+  anti-patterns:
+    - long-method
+    - long-parameter-list
+
+  metrics:
+    cyclomatic-complexity: 20
+    lines-of-executable-code: 50
+    maximum-nesting-level: 5
+    number-of-parameters: 5
+    source-lines-of-code: 50
+
+  metrics-exclude:
+    - test/**
+    - integration_test/**
+    - lib/*.g.dart
+    - lib/*.freezed.dart
+
+  rules:
+    - newline-before-return
+    - no-boolean-literal-compare
+    - no-empty-block
+    - prefer-trailing-comma
+    - prefer-conditional-expressions
+    - no-equal-then-else
+    # - avoid-dynamic
+    - avoid-nested-conditional-expressions:
+        acceptable-level: 2
+    - prefer-first
+
 linter:
+
+  # Customise to enable/disable rules in
+  # `package:flutter_lints/flutter.yaml`.
+  #
+  # See https://dart.dev/tools/linter-rules.
+  #
+  # A lint rule can be suppressed for a single line of code or a
+  # specific dart file by using the `// ignore: name_of_lint` and `//
+  # ignore_for_file: name_of_lint`
+  
   rules:
     avoid_print: true # Set to true, debug using debugPrint
-    prefer_const_constructors_in_immutables: false
-    prefer_const_constructors: false
-    prefer_const_literals_to_create_immutables: false
+    prefer_single_quotes: true
+    require_trailing_commas: true
+    directives_ordering: false
     prefer_final_fields: true
     unnecessary_breaks: true
     use_key_in_widget_constructors: false
