@@ -18,7 +18,7 @@ class MLHubApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MLHub Flutter App',
+      title: 'MLHub App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -137,7 +137,29 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       selectedColor: Theme.of(context).colorScheme.primary,
     );
 
-     Widget versionLabel = Padding(
+    Widget aboutButton = ListTile(
+      leading: Icon(Icons.info),
+      title: Text('About'),
+      onTap: () {
+        showAboutDialog(
+          context: context,
+          applicationVersion: 'Current version: $_appVersion',
+          // applicationLegalese: '© XXX',
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: SelectableText(
+                'MLHub app provides you with easy access to the latest state of the art in AI, Machine Learning, and Data Science.\nVisit the MLHub Book at  https://survivor.togaware.com/mlhub/',
+              ),
+            ),
+          ],
+        );
+      },
+      selected: selectedIndex == 6,
+      selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+    );
+
+    Widget versionLabel = Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text('Version: $_appVersion', style: TextStyle(color: Colors.grey)),
     );
@@ -152,7 +174,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
             child: Column(
               children: [
                 Expanded(child: ListView(children: mainButtons)),
-                logButton, // This will always be at the bottom
+                // Below buttons will always be at the bottom
+                logButton, 
+                aboutButton,
                 versionLabel,
               ],
             ),
@@ -192,7 +216,7 @@ class IntroductionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Welcome to MLHub Flutter App'),
+      child: Text('Welcome to MLHub App'),
     );
   }
 }
