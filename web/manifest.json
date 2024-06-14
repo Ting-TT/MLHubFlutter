@@ -1,6 +1,6 @@
 {
-    "name": "mlhub_flutter",
-    "short_name": "mlhub_flutter",
+    "name": "mlflutter",
+    "short_name": "mlflutter",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

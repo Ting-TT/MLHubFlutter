@@ -1,6 +1,9 @@
 *generated*
 *Generated*
 pubspec.lock
+installers/*.tar.gz
+*~
+
 
 # Miscellaneous
 *.class
