@@ -7,27 +7,38 @@ across all platforms, mlflutter relies on mlhub packages being
 available on the platform. At present we only support dekstops (Linux,
 MacOS, and Windows).
 
+## Prerequisite
+
+Install R. See the instructions from the [R
+Project](https://cloud.r-project.org/).
+
 ## Linux tar Archive
 
-+ Download
-  [mlflutter.tar.gz](https://access.togaware.com/mlflutter.tar.gz)
++ Download [mlflutter.tar.gz](https://access.togaware.com/mlflutter.tar.gz)
 
 ```bash
 wget https://access.togaware.com/mlflutter.tar.gz
 ```
 
-Then
+Then, to simply try it out locally:
 
 ```bash
 tar zxvf mlflutter.tar.gz
-(cd mlflutter; ./mlfutter)
+mlflutter/mlfutter)
 ```
 
-To install for the current user:
+Or, to install for the current user:
 
 ```bash
 tar zxvf mlflutter.tar.gz -C ${HOME}/.local/share/
 ln -s ${HOME}/.local/share/mlflutter/mlflutter ${HOME}/.local/bin
+```
+
+Or, for a system-wide install:
+
+```bash
+sudo tar zxvf mlflutter.tar.gz -C /opt/
+sudo ln -s /opt/mlflutter/mlflutter /usr/local/bin/
 ```
 
 ## MacOS
