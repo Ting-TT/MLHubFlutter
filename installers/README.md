@@ -27,12 +27,7 @@ To install for the current user:
 
 ```bash
 tar zxvf mlflutter.tar.gz -C ${HOME}/.local/share/
-cat <<EOF > ~/.local/bin/mlflutter
-#!/bin/bash
-
-(cd ${HOME}/.local/share/mlflutter; ./mlflutter)
-EOF
-chmod a+rx ${HOME}/.local/bin/mlflutter
+ln -s ${HOME}/.local/share/mlflutter/mlflutter ${HOME}/.local/bin
 ```
 
 ## MacOS
