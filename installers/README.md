@@ -2,7 +2,7 @@
 
 Flutter supports multiple platform targets and the app will run native
 on Android, iOS, Linux, MacOS, and Windows, as well as directly in a
-browser from the web. While the functionality is in theory identical
+browser from the web. While the Flutter functionality is in theory identical
 across all platforms, mlflutter relies on mlhub packages being
 available on the platform. At present we only support dekstops (Linux,
 MacOS, and Windows).
@@ -34,12 +34,24 @@ tar zxvf mlflutter.tar.gz -C ${HOME}/.local/share/
 ln -s ${HOME}/.local/share/mlflutter/mlflutter ${HOME}/.local/bin
 ```
 
+For this user, to install a desktop icon and make it known to Gnome
+and KDE:
+
+```bash
+wget https://raw.githubusercontent.com/gjwgit/mlflutter/dev/installers/mlflutter.desktop -O ${HOME}/.local/share/applications/mlflutter.desktop
+mkdir -p ${HOME}/.local/share/icons/hicolor/scalable/apps/
+wget https://raw.githubusercontent.com/gjwgit/mlflutter/dev/installers/mlflutter.svg -O ${HOME}/.local/share/icons/hicolor/scalable/apps/mlflutter.svg
+```
+
 Or, for a system-wide install:
 
 ```bash
 sudo tar zxvf mlflutter.tar.gz -C /opt/
 sudo ln -s /opt/mlflutter/mlflutter /usr/local/bin/
-```
+``` 
+
+Once installed you can run the app as Alt-F2 and type `rattle` then
+Enter.
 
 ## MacOS
 

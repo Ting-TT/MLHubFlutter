@@ -7,4 +7,5 @@ numbers.
 
 ## 0.1.0 FUTURE
 
++ Set up installation for Linux [0.0.2]
 + Import Ting's updated version [0.0.1]
