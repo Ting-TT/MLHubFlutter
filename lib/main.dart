@@ -171,16 +171,16 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     );
 
     Widget aboutButton = ListTile(
-      leading: Icon(Icons.info),
-      title: Text('About'),
+      leading: const Icon(Icons.info),
+      title: const Text('About'),
       onTap: () {
         showAboutDialog(
           context: context,
           applicationVersion: 'Current version: $_appVersion',
-          // applicationLegalese: '© XXX',
+          applicationLegalese: '© 2024 Authors',
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 15),
+            const Padding(
+              padding: EdgeInsets.only(top: 15),
               child: SelectableText(
                 'MLHub app provides you with easy access to the latest state of the art in AI, Machine Learning, and Data Science.\nVisit the MLHub Book at  https://survivor.togaware.com/mlhub/',
               ),
@@ -211,7 +211,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
               children: [
                 Expanded(child: ListView(children: mainButtons)),
                 // Below buttons will always be at the bottom
-                logButton, 
+                logButton,
                 aboutButton,
                 versionLabel,
               ],
