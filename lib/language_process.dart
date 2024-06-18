@@ -502,11 +502,10 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
 
   Future<void> runExternalCommand(String filePath, WidgetRef ref) async {
     if (isProcessRunning) {
-      debugPrint('A process is already running. Please wait until it finishes.');
       return; // Prevent a new process if one is already running
     }
-    isProcessRunning = true;  // Mark that a process is now running
-   _cancelled = false; // Reset the cancellation flag
+    isProcessRunning = true; // Mark that a process is now running
+    _cancelled = false; // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
       String escapedFilePath = filePath.replaceAll(' ', '\\ ');
@@ -637,7 +636,6 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
       _cancelled = true; // Set the cancellation flag
       _runningProcess!.kill(ProcessSignal.sigint);
 
-
       // Wait for the process to terminate
       _runningProcess!.exitCode.then((_) {
         if (mounted) {
@@ -648,7 +646,7 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
             _outputController.text = 'Operation cancelled.';
             _runningProcess = null;
           });
-          debugPrint("Process successfully cancelled.");
+          debugPrint('Process successfully cancelled.');
           updateLog(ref, 'Operation cancelled.');
         }
       }).catchError((error) {
@@ -664,5 +662,4 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
       });
     }
   }
-
 }
