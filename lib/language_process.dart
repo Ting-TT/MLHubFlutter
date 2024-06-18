@@ -469,7 +469,32 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
   }
 
   void _runOrNot(WidgetRef ref) {
-    if (_droppedFiles.isNotEmpty && !_isRunning) {
+    // Alert user to provide an input file if none is provided
+    if (_droppedFiles.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Input File Missing'),
+            content: const Text(
+              'Please provide an audio or video file first, either drag-and-drop or Choose File.',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+
+      return;
+    }
+
+    if (!_isRunning) {
       // Check MIME type
       var mimeType = lookupMimeType(_droppedFiles.first.path);
 
