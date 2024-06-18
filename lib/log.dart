@@ -35,7 +35,7 @@ void updateLog(WidgetRef ref, String message, {bool includeTimestamp = false}) {
   if (includeTimestamp) {
     final now = DateTime.now();
     String timeStamp = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
-    logMessage = "---[$timeStamp]\n $message";
+    logMessage = '---[$timeStamp]\n $message';
   }
   ref.read(logProvider.notifier).update((state) => [...state, logMessage]);
 }
@@ -60,14 +60,21 @@ class LogPageState extends ConsumerState<LogPage> {
                   itemCount: logs.length,
                   itemBuilder: (context, index) {
                     // Check for the separator marker in the log entry
-                    bool hasTimestamp = logs[index].startsWith("---");
+                    bool hasTimestamp = logs[index].startsWith('---');
+
                     return Column(
                       children: <Widget>[
-                        if (hasTimestamp) Divider(color: Colors.grey),  // Insert a Divider if the log has a timestamp
+                        if (hasTimestamp)
+                          const Divider(
+                            color: Colors.grey,
+                          ), // Insert a Divider if the log has a timestamp
                         ListTile(
                           title: Text(
-                            logs[index].replaceAll("---", ""),  // Remove the separator marker when displaying
-                            style: const TextStyle(fontFamily: 'Monospace')
+                            logs[index].replaceAll(
+                              '---',
+                              '',
+                            ), // Remove the separator marker when displaying
+                            style: const TextStyle(fontFamily: 'Monospace'),
                           ),
                         ),
                       ],
@@ -79,4 +86,3 @@ class LogPageState extends ConsumerState<LogPage> {
     );
   }
 }
-
