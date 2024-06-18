@@ -1,15 +1,44 @@
-import 'language_process.dart';
-import 'log.dart';
+/// Entry point for the mlflutter app.
+///
+/// Copyright (C) 2024 Authors
+///
+/// Licensed under the GNU General Public License, Version 3 (the "License");
+///
+/// License: https://www.gnu.org/licenses/gpl-3.0.en.html
+//
+// This program is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along with
+// this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+/// Authors: Ting Tang, Graham Williams
+
+library;
+
+// Group imports by dart, flutter, packages, local. Then alphabetically.
+
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:window_manager/window_manager.dart';
+
+import 'package:mlflutter/language_process.dart';
+import 'package:mlflutter/log.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   WindowManager.instance.setMinimumSize(const Size(700, 500));
-  runApp(ProviderScope(child: MLHubApp())); // Wrap with ProviderScope
+  runApp(const ProviderScope(child: MLHubApp())); // Wrap with ProviderScope
 }
 
 class MLHubApp extends StatelessWidget {
@@ -36,7 +65,7 @@ class MLHubMainPage extends StatefulWidget {
 class _MLHubMainPageState extends State<MLHubMainPage> {
   var selectedIndex = 0;
   bool isLanguageExpanded = false;
-  String _appVersion = 'Unknown'; 
+  String _appVersion = 'Unknown';
 
   @override
   void initState() {
@@ -54,12 +83,11 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
   void onDestinationSelected(int index) {
     setState(() {
       selectedIndex = index;
-      if ((index == 1 && !isLanguageExpanded) || index == 2 || index == 3) {
-        // Assuming "Language" is at index 1, and its children are at 2 and 3
-        isLanguageExpanded = true;
-      } else {
-        isLanguageExpanded = false;
-      }
+      ((index == 1 && !isLanguageExpanded) || index == 2 || index == 3)
+          ?
+          // Assuming "Language" is at index 1, and its children are at 2 and 3
+          isLanguageExpanded = true
+          : isLanguageExpanded = false;
     });
   }
 
@@ -68,19 +96,21 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     // Navigation buttons in the sidebar
     List<Widget> mainButtons = [
       ListTile(
-        leading: Icon(Icons.home),
-        title: Text('Home'),
+        leading: const Icon(Icons.home),
+        title: const Text('Home'),
         onTap: () => onDestinationSelected(0),
         selected: selectedIndex == 0,
-        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
         selectedColor: Theme.of(context).colorScheme.primary,
       ),
       ListTile(
-        leading: Icon(Icons.language),
-        title: Text('Language'),
+        leading: const Icon(Icons.language),
+        title: const Text('Language'),
         onTap: () => onDestinationSelected(1),
         selected: selectedIndex == 1,
-        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
         selectedColor: Theme.of(context).colorScheme.primary,
       ),
     ];
@@ -90,12 +120,13 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         visible: isLanguageExpanded,
         child: ListTile(
           // Add indentation to represent "Transcribe" is a sub button under Language
-          contentPadding: EdgeInsets.only(left: 32),
-          leading: Icon(Icons.transcribe),
-          title: Text('Transcribe'),
+          contentPadding: const EdgeInsets.only(left: 32),
+          leading: const Icon(Icons.transcribe),
+          title: const Text('Transcribe'),
           onTap: () => onDestinationSelected(2),
           selected: selectedIndex == 2,
-          selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          selectedTileColor:
+              Theme.of(context).colorScheme.primary.withOpacity(0.1),
           selectedColor: Theme.of(context).colorScheme.primary,
         ),
       ),
@@ -106,12 +137,13 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
         visible: isLanguageExpanded,
         child: ListTile(
           // Add indentation to represent "Translate" is a sub button under Language
-          contentPadding: EdgeInsets.only(left: 32),
-          leading: Icon(Icons.translate),
-          title: Text('Translate'),
+          contentPadding: const EdgeInsets.only(left: 32),
+          leading: const Icon(Icons.translate),
+          title: const Text('Translate'),
           onTap: () => onDestinationSelected(3),
           selected: selectedIndex == 3,
-          selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          selectedTileColor:
+              Theme.of(context).colorScheme.primary.withOpacity(0.1),
           selectedColor: Theme.of(context).colorScheme.primary,
         ),
       ),
@@ -119,18 +151,19 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 
     mainButtons.add(
       ListTile(
-        leading: Icon(Icons.visibility),
-        title: Text('Vision'),
+        leading: const Icon(Icons.visibility),
+        title: const Text('Vision'),
         onTap: () => onDestinationSelected(4),
         selected: selectedIndex == 4,
-        selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
         selectedColor: Theme.of(context).colorScheme.primary,
       ),
     );
 
     Widget logButton = ListTile(
-      leading: Icon(Icons.list_alt),
-      title: Text('Log'),
+      leading: const Icon(Icons.list_alt),
+      title: const Text('Log'),
       onTap: () => onDestinationSelected(5),
       selected: selectedIndex == 5,
       selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
@@ -161,7 +194,10 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 
     Widget versionLabel = Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text('Version: $_appVersion', style: TextStyle(color: Colors.grey)),
+      child: Text(
+        'Version: $_appVersion',
+        style: const TextStyle(color: Colors.grey),
+      ),
     );
 
     double sidebarWidth = 180; // Sidebar width
@@ -169,7 +205,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     return Scaffold(
       body: Row(
         children: [
-          Container(
+          SizedBox(
             width: sidebarWidth,
             child: Column(
               children: [
@@ -196,7 +232,7 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
     switch (selectedIndex) {
       case 0:
         return IntroductionPage();
-      // Case 1: Language button is clicked and sub buttons are shown/hidden, 
+      // Case 1: Language button is clicked and sub buttons are shown/hidden,
       // no need to show any page.
       case 2: // Transcribe
         return TranscribePage();
@@ -215,8 +251,8 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
 class IntroductionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Welcome to MLHub App'),
+    return const Center(
+      child: Text('Welcome to MLHub Flutter App'),
     );
   }
 }
@@ -224,21 +260,21 @@ class IntroductionPage extends StatelessWidget {
 class TranscribePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return LanguageProcessPage(processType: ProcessType.transcribe);
+    return const LanguageProcessPage(processType: ProcessType.transcribe);
   }
 }
 
 class TranslatePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return LanguageProcessPage(processType: ProcessType.translate);
+    return const LanguageProcessPage(processType: ProcessType.translate);
   }
 }
 
 class ComputerVisionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Computer Vision Page'),
     );
   }
