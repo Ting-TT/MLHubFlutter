@@ -39,7 +39,6 @@ class LogPage extends ConsumerStatefulWidget {
 }
 
 class LogPageState extends ConsumerState<LogPage> {
-
   @override
   Widget build(BuildContext context) {
     final logs = ref.watch(logProvider);
@@ -49,12 +48,14 @@ class LogPageState extends ConsumerState<LogPage> {
         color: Theme.of(context).colorScheme.primaryContainer,
         child: SelectionArea(
           child: logs.isEmpty
-              ? Center(child: Text('No logs available'))
+              ? const Center(child: Text('No logs available'))
               : ListView.builder(
                   itemCount: logs.length,
                   itemBuilder: (context, index) => ListTile(
-                    title: Text(logs[index],
-                        style: TextStyle(fontFamily: 'Monospace')),
+                    title: Text(
+                      logs[index],
+                      style: const TextStyle(fontFamily: 'Monospace'),
+                    ),
                   ),
                 ),
         ),
