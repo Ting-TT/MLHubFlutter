@@ -27,7 +27,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:mlhub_flutter/utils/save_file.dart';
+
+import 'package:mlflutter/utils/save_file.dart';
 
 final logProvider = StateProvider<List<String>>((ref) => []);
 
@@ -87,15 +88,17 @@ class LogPageState extends ConsumerState<LogPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           String result = await saveToFile(
-              content: ref.read(logProvider).join('\n'),
-              defaultFileName:
-                  'mlflutter_log_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.txt');
+            content: ref.read(logProvider).join('\n'),
+            defaultFileName:
+                'mlflutter_log_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.txt',
+          );
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(result)));
           }
         },
         tooltip: 'Save Logs',
-        child: Icon(Icons.save),
+        child: const Icon(Icons.save),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

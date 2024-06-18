@@ -410,33 +410,40 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
           ),
         ),
 
-        SizedBox(height: 16.0),
-        Row(children: [
-          Text('Output:', style: TextStyle(fontSize: 18)),
-          SizedBox(width: 10.0),
-          ElevatedButton(
-            onPressed: () async {
-              if (_outputController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('No output to save.'))
+        const SizedBox(height: 16.0),
+        Row(
+          children: [
+            const Text('Output:', style: TextStyle(fontSize: 18)),
+            const SizedBox(width: 10.0),
+            ElevatedButton(
+              onPressed: () async {
+                if (_outputController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('No output to save.')),
+                  );
+
+                  return;
+                }
+                String defaultFileName =
+                    '${path_lib.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat';
+                String initialDirectory =
+                    path_lib.dirname(_droppedFiles.first.path);
+                String result = await saveToFile(
+                  content: _outputController.text,
+                  defaultFileName: defaultFileName,
+                  initialDirectory: initialDirectory,
                 );
-                return;
-              }
-              String defaultFileName = path_lib.basenameWithoutExtension(_droppedFiles.first.path) + ".$selectedFormat";
-              String initialDirectory = path_lib.dirname(_droppedFiles.first.path);
-              String result = await saveToFile(
-                content: _outputController.text,
-                defaultFileName: defaultFileName,
-                initialDirectory: initialDirectory
-              );
-              if (mounted) {  // Check if the widget is still mounted
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
-              }
-            },
-            child: Text('Save'),
-          ),
-        ]),
-        SizedBox(height: 8.0),
+                if (mounted) {
+                  // Check if the widget is still mounted
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(result)));
+                }
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8.0),
         Expanded(
           child: Container(
             margin: const EdgeInsets.only(bottom: 3.0),
