@@ -1,14 +1,42 @@
+/// Transcribe or translate the audio file.
+///
+/// Copyright (C) 2024 Authors
+///
+/// Licensed under the GNU General Public License, Version 3 (the "License");
+///
+/// License: https://www.gnu.org/licenses/gpl-3.0.en.html
+//
+// This program is free software: you can redistribute it and/or modify it under
+// the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+// details.
+//
+// You should have received a copy of the GNU General Public License along with
+// this program.  If not, see <https://www.gnu.org/licenses/>.
+///
+/// Authors: Ting Tang
+
+library;
+
 import 'dart:convert';
 import 'dart:io';
-import 'log.dart';
+
+import 'package:flutter/material.dart';
+
 import 'package:cross_file/cross_file.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mime/mime.dart';
-import 'package:path/path.dart' as Path;
+import 'package:path/path.dart' as path_lib;
+
+import 'package:mlflutter/log.dart';
 
 // The list of languages supported by Whisper for the input audio file.
 // Referred to the LANGUAGES from https://github.com/openai/whisper/blob/main/whisper/tokenizer.py
@@ -125,10 +153,10 @@ class LanguageProcessPage extends StatefulWidget {
   const LanguageProcessPage({super.key, required this.processType});
 
   @override
-  _LanguageProcessPageState createState() => _LanguageProcessPageState();
+  LanguageProcessPageState createState() => LanguageProcessPageState();
 }
 
-class _LanguageProcessPageState extends State<LanguageProcessPage> {
+class LanguageProcessPageState extends State<LanguageProcessPage> {
   List<String> translationOutputLanguageOptions = [
     'English',
   ]; // Currently, only English is supported because only 'OpenAI' is implemented
@@ -178,19 +206,18 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('Building with _isRunning: $_isRunning');
+
     return Consumer(
       builder: (context, ref, child) {
-        return Container(
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child:
-                    buildMainContent(ref), // Apply padding only to main content
-              ),
-              if (_isRunning) buildOverlay(ref), // Present a processing page
-            ],
-          ),
+        return Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child:
+                  buildMainContent(ref), // Apply padding only to main content
+            ),
+            if (_isRunning) buildOverlay(ref), // Present a processing page
+          ],
         );
       },
     );
@@ -526,12 +553,13 @@ class _LanguageProcessPageState extends State<LanguageProcessPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No output to save.')),
       );
+
       return;
     }
 
     String defaultFileName =
-        '${Path.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat';
-    String initialDirectory = Path.dirname(_droppedFiles.first.path);
+        '${path_lib.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat';
+    String initialDirectory = path_lib.dirname(_droppedFiles.first.path);
 
     String? path = await FilePicker.platform.saveFile(
       dialogTitle: 'Save your file',

@@ -1,6 +1,6 @@
 /// Entry point for the mlflutter app.
 ///
-/// Copyright (C) 2024
+/// Copyright (C) 2024 Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -19,7 +19,7 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang
+/// Authors: Ting Tang, Graham Williams
 
 library;
 
