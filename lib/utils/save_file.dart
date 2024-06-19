@@ -40,7 +40,7 @@ Future<String> saveToFile({
   String? initialDirectory,
 }) async {
   if (content.isEmpty) {
-    return 'No output to save.';
+    return 'No content to save. Please ensure there is content before saving.';
   }
 
   String? path = await FilePicker.platform.saveFile(

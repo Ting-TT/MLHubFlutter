@@ -86,18 +86,22 @@ class LogPageState extends ConsumerState<LogPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          String result = await saveToFile(
-            content: ref.read(logProvider).join('\n'),
-            defaultFileName:
-                'mlflutter_log_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.txt',
-          );
-          if (mounted) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(result)));
-          }
-        },
+        onPressed: logs.isNotEmpty
+            ? () async {
+                String result = await saveToFile(
+                  content: ref.read(logProvider).join('\n'),
+                  defaultFileName:
+                      'mlflutter_log_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.txt',
+                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(result)));
+                }
+              }
+            : null,
         tooltip: 'Save Logs',
+        backgroundColor: logs.isNotEmpty ? null : Colors.grey,
+        foregroundColor: logs.isNotEmpty ? null : Colors.black45,
         child: const Icon(Icons.save),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

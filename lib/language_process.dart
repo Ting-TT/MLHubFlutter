@@ -416,29 +416,30 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
             const Text('Output:', style: TextStyle(fontSize: 18)),
             const SizedBox(width: 10.0),
             ElevatedButton(
-              onPressed: () async {
-                if (_outputController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('No output to save.')),
-                  );
-
-                  return;
-                }
-                String defaultFileName =
-                    '${path_lib.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat';
-                String initialDirectory =
-                    path_lib.dirname(_droppedFiles.first.path);
-                String result = await saveToFile(
-                  content: _outputController.text,
-                  defaultFileName: defaultFileName,
-                  initialDirectory: initialDirectory,
-                );
-                if (mounted) {
-                  // Check if the widget is still mounted
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(result)));
-                }
-              },
+              onPressed: _outputController.text.isNotEmpty
+                  ? () async {
+                      String defaultFileName =
+                          '${path_lib.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat';
+                      String initialDirectory =
+                          path_lib.dirname(_droppedFiles.first.path);
+                      String result = await saveToFile(
+                        content: _outputController.text,
+                        defaultFileName: defaultFileName,
+                        initialDirectory: initialDirectory,
+                      );
+                      if (mounted) {
+                        // Check if the widget is still mounted
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(result)));
+                      }
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    _outputController.text.isNotEmpty ? null : Colors.grey,
+                foregroundColor:
+                    _outputController.text.isNotEmpty ? null : Colors.black45,
+              ),
               child: const Text('Save'),
             ),
           ],
