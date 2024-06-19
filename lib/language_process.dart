@@ -523,7 +523,7 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
         runInShell: true,
       );
       debugPrint('Command: $command');
-      updateLog(ref, 'Command executed:\n$command');
+      updateLog(ref, 'Command executed:\n$command', includeTimestamp: true);
 
       // Capture the stdout and trim it to remove leading/trailing whitespace.
       String completeOutput = '';
