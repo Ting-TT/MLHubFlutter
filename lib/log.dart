@@ -28,6 +28,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import 'package:mlflutter/utils/save_file.dart';
+
 final logProvider = StateProvider<List<String>>((ref) => []);
 
 void updateLog(WidgetRef ref, String message, {bool includeTimestamp = false}) {
@@ -83,6 +85,26 @@ class LogPageState extends ConsumerState<LogPage> {
                 ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: logs.isNotEmpty
+            ? () async {
+                String result = await saveToFile(
+                  content: ref.read(logProvider).join('\n'),
+                  defaultFileName:
+                      'mlflutter_log_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.txt',
+                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text(result)));
+                }
+              }
+            : null,
+        tooltip: 'Save Logs',
+        backgroundColor: logs.isNotEmpty ? null : Colors.grey,
+        foregroundColor: logs.isNotEmpty ? null : Colors.black45,
+        child: const Icon(Icons.save),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -37,6 +37,7 @@ import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path_lib;
 
 import 'package:mlflutter/log.dart';
+import 'package:mlflutter/utils/save_file.dart';
 
 // The list of languages supported by Whisper for the input audio file.
 // Referred to the LANGUAGES from https://github.com/openai/whisper/blob/main/whisper/tokenizer.py
@@ -415,7 +416,30 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
             const Text('Output:', style: TextStyle(fontSize: 18)),
             const SizedBox(width: 10.0),
             ElevatedButton(
-              onPressed: saveToFile,
+              onPressed: _outputController.text.isNotEmpty
+                  ? () async {
+                      String defaultFileName =
+                          '${path_lib.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat';
+                      String initialDirectory =
+                          path_lib.dirname(_droppedFiles.first.path);
+                      String result = await saveToFile(
+                        content: _outputController.text,
+                        defaultFileName: defaultFileName,
+                        initialDirectory: initialDirectory,
+                      );
+                      if (mounted) {
+                        // Check if the widget is still mounted
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(result)));
+                      }
+                    }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    _outputController.text.isNotEmpty ? null : Colors.grey,
+                foregroundColor:
+                    _outputController.text.isNotEmpty ? null : Colors.black45,
+              ),
               child: const Text('Save'),
             ),
           ],
@@ -570,52 +594,6 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
         setState(() => _outputController.text = 'Error: $e');
       }
       debugPrint('An error occurred while running the process: $e');
-    }
-  }
-
-  Future<void> saveToFile() async {
-    if (_outputController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No output to save.')),
-      );
-
-      return;
-    }
-
-    String defaultFileName =
-        '${path_lib.basenameWithoutExtension(_droppedFiles.first.path)}.$selectedFormat';
-    String initialDirectory = path_lib.dirname(_droppedFiles.first.path);
-
-    String? path = await FilePicker.platform.saveFile(
-      dialogTitle: 'Save your file',
-      fileName: defaultFileName,
-      initialDirectory: initialDirectory,
-      type: FileType.custom,
-      allowedExtensions: [selectedFormat],
-    );
-
-    if (path != null) {
-      File file = File(path);
-      try {
-        await file.writeAsString(_outputController.text);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('File saved to $path')),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to save file: $e')),
-          );
-        }
-      }
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('File save failed.')),
-        );
-      }
     }
   }
 
