@@ -2,7 +2,7 @@
 #
 # Generic Makefile
 #
-# Time-stamp: <Tuesday 2024-06-11 14:21:25 +1000 Graham Williams>
+# Time-stamp: <Saturday 2024-06-15 08:58:41 +1000 Graham Williams>
 #
 # Copyright (c) Graham.Williams@togaware.com
 #
@@ -59,7 +59,8 @@ endif
 define HELP
 $(APP):
 
-  locals	     No local targets defined yet.
+  local	     Install to $(HOME)/.local/share/$(APP)
+  tgz	     Upload the installer to access.togaware.com
 
 endef
 export HELP
@@ -70,5 +71,13 @@ help::
 ########################################################################
 # LOCAL TARGETS
 
-locals:
-	@echo "This might be the instructions to install $(APP)"
+# Install locally for linux.
+
+local:
+	tar zxvf installers/$(APP).tar.gz -C $(HOME)/.local/share/
+
+# Upload to access.togaware.com.
+
+tgz::
+	chmod a+r installers/*.tar.gz
+	rsync -avzh installers/*.tar.gz togaware.com:apps/access/
