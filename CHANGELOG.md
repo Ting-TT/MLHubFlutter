@@ -6,6 +6,7 @@ Instructions: For release 0.7 we list the incremental updates 0.6.1 etc.
 numbers.
 
 ## 0.1.0 FUTURE
+
 + Add a save button on the log page [0.0.7]
 + Add an alert popup window when no file is provided for transcription [0.0.6]
 + Add an about dialog of the app [0.0.5]

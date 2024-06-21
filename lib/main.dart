@@ -1,6 +1,6 @@
 /// Entry point for the mlflutter app.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -57,7 +57,7 @@ class MLHub extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MLHub App',
+      title: 'MLHub Flutter App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
