@@ -1,4 +1,4 @@
-/// Entry point for the mlflutter app.
+/// Vision page for the mlflutter app.
 ///
 /// Copyright (C) 2024 Authors
 ///
@@ -19,32 +19,22 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang, Graham Williams
-///
+/// Authors: Ting Tang
+
 library;
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
-
-import 'package:mlflutter/app.dart';
-
-// Check if this is a production (--release) version.
-const bool isProduction = bool.fromEnvironment('dart.vm.product');
-
-void main() async {
-  // In production do not display [debugPrint] messages.
-  if (isProduction) {
-    debugPrint = (String? message, {int? wrapWidth}) {};
+class VisionPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: const Center(
+          child: Text('Computer Vision Page'),
+        ),
+      ),
+    );
   }
-
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  WindowManager.instance.setMinimumSize(const Size(700, 500));
-  runApp(
-    const ProviderScope(
-      child: MLHub(),
-    ),
-  ); // Run the app with ProviderScope for state management
 }
