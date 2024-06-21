@@ -1,6 +1,6 @@
 /// Entry point for the mlflutter app.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -34,15 +34,25 @@ import 'package:window_manager/window_manager.dart';
 import 'package:mlflutter/language_process.dart';
 import 'package:mlflutter/log.dart';
 
+// Check if this is a production (--release) version.
+
+const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
 void main() async {
+  // In production do not display [debguPrint] messages.
+
+  if (isProduction) {
+    debugPrint = (String? message, {int? wrapWidth}) {};
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   WindowManager.instance.setMinimumSize(const Size(700, 500));
-  runApp(const ProviderScope(child: MLHubApp())); // Wrap with ProviderScope
+  runApp(const ProviderScope(child: MLHub())); // Wrap with ProviderScope
 }
 
-class MLHubApp extends StatelessWidget {
-  const MLHubApp({super.key});
+class MLHub extends StatelessWidget {
+  const MLHub({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -170,6 +180,28 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
       selectedColor: Theme.of(context).colorScheme.primary,
     );
 
+    Widget aboutButton = ListTile(
+      leading: const Icon(Icons.info),
+      title: const Text('About'),
+      onTap: () {
+        showAboutDialog(
+          context: context,
+          applicationVersion: 'Current version: $_appVersion',
+          applicationLegalese: '© 2024 Authors',
+          children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.only(top: 15),
+              child: SelectableText(
+                'MLHub app provides you with easy access to the latest state of the art in AI, Machine Learning, and Data Science.\nVisit the MLHub Book at  https://survivor.togaware.com/mlhub/',
+              ),
+            ),
+          ],
+        );
+      },
+      selected: selectedIndex == 6,
+      selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+    );
+
     Widget versionLabel = Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
@@ -188,7 +220,9 @@ class _MLHubMainPageState extends State<MLHubMainPage> {
             child: Column(
               children: [
                 Expanded(child: ListView(children: mainButtons)),
-                logButton, // This will always be at the bottom
+                // Below buttons will always be at the bottom
+                logButton,
+                aboutButton,
                 versionLabel,
               ],
             ),
