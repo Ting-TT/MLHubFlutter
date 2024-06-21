@@ -7,6 +7,7 @@ numbers.
 
 ## 0.1.0 FUTURE
 
++ Fix the issue where the transcribe process is not cancelled properly [0.0.8]
 + Add a save button on the log page [0.0.7]
 + Add an alert popup window when no file is provided for transcription [0.0.6]
 + Add an about dialog of the app [0.0.5]
