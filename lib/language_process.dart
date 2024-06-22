@@ -1,6 +1,6 @@
 /// Transcribe or translate the audio file.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -19,7 +19,9 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang
+/// Authors: Ting Tang, Graham Williams
+
+// TODO 20240622 gjw FILE TOO LONG. USE A MORE STRUCTURED APPROACH.
 
 library;
 
@@ -41,6 +43,7 @@ import 'package:mlflutter/utils/save_file.dart';
 
 // The list of languages supported by Whisper for the input audio file.
 // Referred to the LANGUAGES from https://github.com/openai/whisper/blob/main/whisper/tokenizer.py
+
 List<String> inputLanguageOptions = [
   'Not specified',
   'Afrikaans',
@@ -145,7 +148,8 @@ List<String> inputLanguageOptions = [
   'Yoruba',
 ];
 
-// Define an enum to differentiate the modes
+// Define an enum to differentiate the modes.
+
 enum ProcessType { transcribe, translate }
 
 // Flag to track if a process is running
@@ -161,26 +165,36 @@ class LanguageProcessPage extends StatefulWidget {
 }
 
 class LanguageProcessPageState extends State<LanguageProcessPage> {
+  // Currently, only English is supported because only 'OpenAI' is implemented.
+
   List<String> translationOutputLanguageOptions = [
     'English',
-  ]; // Currently, only English is supported because only 'OpenAI' is implemented
-  String? selectedModel = 'OpenAI'; // Set the default model to 'OpenAI'
+  ];
+
+  // Set the default model to 'OpenAI'.
+
+  String? selectedModel = 'OpenAI';
+
   String selectedFormat = 'txt';
   String? selectedInputLanguage = 'Not specified';
   String? selectedOutputLanguage = 'English';
   String outputText = '';
-  bool _isRunning = false; // Track whether the command is running
-  bool _cancelled = false; // Track whether the command is cancelled
-  Process? _runningProcess; // Control the process running
-  final List<XFile> _droppedFiles = []; // Store the paths of dropped files
+
+  bool _isRunning = false; // Track whether the command is running.
+  bool _cancelled = false; // Track whether the command is cancelled.
+
+  Process? _runningProcess; // Control the process running.
+
+  final List<XFile> _droppedFiles = []; // Store the paths of dropped files.
+
   final TextEditingController _outputController = TextEditingController();
 
-  // Commented out fetchSupportedLanguages() function which fetches the list
-  // inputLanguageOptions using "ml supported openai" command and will get the
-  // most update-to-date version of what languages Whisper supports.
-  // However, this function is commented out because it takes quite a few
-  // seconds to load the language list on the UI, so now we are back to use a
-  // predefined inputLanguageOptions list instead.
+  // 20240622 ting Commented out fetchSupportedLanguages() function which
+  // fetches the list inputLanguageOptions using "ml supported openai" command
+  // and will get the most update-to-date version of what languages Whisper
+  // supports.  However, this function is commented out because it takes quite a
+  // few seconds to load the language list on the UI, so now we are back to use
+  // a predefined inputLanguageOptions list instead.
 
   // @override
   // void initState() {
@@ -202,8 +216,10 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
 
   @override
   void dispose() {
-    _outputController
-        .dispose(); // Dispose of the controller when the widget is disposed
+    // Dispose of the controller when the widget is disposed.
+
+    _outputController.dispose();
+
     super.dispose();
   }
 
@@ -218,9 +234,11 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child:
-                  buildMainContent(ref), // Apply padding only to main content
+                  // Apply padding only to main content.
+                  buildMainContent(ref),
             ),
-            if (_isRunning) buildOverlay(ref), // Present a processing page
+            // Present a processing page.
+            if (_isRunning) buildOverlay(ref),
           ],
         );
       },
@@ -231,12 +249,16 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        // Models available
+        // Models available.
         const Text('Models available:', style: TextStyle(fontSize: 18)),
         const SizedBox(height: 8.0),
         Wrap(
-          spacing: 8.0, // Space between buttons
-          // Buttons for different models
+          // Space between buttons
+
+          spacing: 8.0,
+
+          // Buttons for different models.
+
           children: <Widget>[
             ElevatedButton(
               onPressed: () => setState(() => selectedModel = 'OpenAI'),
@@ -247,20 +269,24 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
               child: const Text('OpenAI'),
             ),
             ElevatedButton(
-              onPressed: null, // Disabled button for Azure
+              // Disabled button for Azure.
+              onPressed: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey, // Set a disabled color
-                foregroundColor:
-                    Colors.black45, // Text color for disabled state
+                // Set a disabled color.
+                backgroundColor: Colors.grey,
+                // Text color for disabled state.
+                foregroundColor: Colors.black45,
               ),
               child: const Text('Azure'),
             ),
             ElevatedButton(
-              onPressed: null, // Disabled button for Google
+              // Disabled button for Google.
+              onPressed: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey, // Set a disabled color
-                foregroundColor:
-                    Colors.black45, // Text color for disabled state
+                // Set a disabled color
+                backgroundColor: Colors.grey,
+                // Text color for disabled state
+                foregroundColor: Colors.black45,
               ),
               child: const Text('Google'),
             ),
@@ -272,7 +298,8 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
         const Text('Output format:', style: TextStyle(fontSize: 18)),
         const SizedBox(height: 8.0),
         Wrap(
-          spacing: 8.0, // Space between buttons
+          // Space between buttons.
+          spacing: 8.0,
           children: <Widget>[
             for (var format in ['txt', 'json', 'srt', 'tsv', 'vtt'])
               ElevatedButton(
@@ -287,13 +314,16 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
         ),
         const SizedBox(height: 16.0),
 
-        // Language options
+        // Language options.
+
         Row(
           children: <Widget>[
             Expanded(
               child: Column(
                 // Language of the input audio file
+
                 crossAxisAlignment: CrossAxisAlignment.start,
+
                 children: [
                   const Text('Input Language:', style: TextStyle(fontSize: 18)),
                   const SizedBox(height: 5.0),
@@ -542,7 +572,8 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
         if (mounted) {
           setState(() {
             _outputController.text =
-                "Input file doesn't look like an audio or video file, please check the input file type.";
+                'Input file does not look like an audio or video file, '
+                'please check the input file type.';
           });
         }
       }
@@ -557,43 +588,72 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
     _cancelled = false; // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
+
       String escapedFilePath = filePath.replaceAll(' ', '\\ ');
+
       // When selectedFormat is txt, do not add argument '-f txt'
       // because default ml command without '-f' specified will output text
       // one sentence per line which is more desired than whisper txt format.
+
       String formatCommand =
           selectedFormat == 'txt' ? '' : '-f $selectedFormat';
+
       String languageCommand = (selectedInputLanguage != null &&
               selectedInputLanguage != 'Not specified')
           ? '-l $selectedInputLanguage'
           : '';
+
       String operation = widget.processType == ProcessType.transcribe
           ? 'transcribe'
           : 'translate';
+
       var command =
           'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
+
+      // TODO 20240622 gjw ON OLIVE STARTING FROM GNOME SHELL PATH DOES NOT
+      // INCLUDE ~/.local/bin` WHERE ml IS INSTALLED. ON KADESH IT
+      // DOES. STARTING FROM TERMINAL ALL IS OKAY BECAUSE THE PATH IS SETUP
+      // OKAY. HOW TO HANDLE THIS?
+
+      // var command = 'printenv PATH';
 
       _runningProcess = await Process.start(
         '/bin/sh',
         ['-c', command],
         runInShell: true,
       );
+
       debugPrint('Command: $command');
       updateLog(ref, 'Command executed:\n$command', includeTimestamp: true);
 
       // Capture the stdout and trim it to remove leading/trailing whitespace.
+
+      // TODO 20240622 gjw DO WE ALSO NEED TO BE COLLECTING stderr OUTPUT TO
+      // REPORT AN ERROR. ALSO NOTING THE COMMENT IN
+      // https://api.flutter.dev/flutter/dart-io/Process/start.html STATING "Users
+      // must read all data coming on the stdout and stderr streams of processes
+      // started with Process.start. If the user does not read all data on the
+      // streams the underlying system resources will not be released since there
+      // is still pending data."
+
       String completeOutput = '';
+
       await for (var output
           in _runningProcess!.stdout.transform(utf8.decoder)) {
         if (_cancelled) break; // Stop processing if cancelled
         completeOutput += output;
       }
+
+      // TODO 20240622 gjw CAN WE ALSO CAPTURE THE
+
       if (_cancelled) return;
+
       if (mounted) {
         setState(() {
           _outputController.text = completeOutput.trim();
         });
       }
+
       debugPrint(completeOutput.trim());
       updateLog(ref, 'Output:\n$completeOutput');
     } catch (e) {
