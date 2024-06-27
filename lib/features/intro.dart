@@ -27,7 +27,7 @@ library;
 
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

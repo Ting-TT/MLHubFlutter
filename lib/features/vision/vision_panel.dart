@@ -25,7 +25,7 @@ library;
 
 import 'package:flutter/material.dart';
 
-class VisionPage extends StatelessWidget {
+class Vision extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

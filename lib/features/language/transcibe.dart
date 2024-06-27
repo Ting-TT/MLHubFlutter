@@ -30,7 +30,7 @@ import 'package:flutter/material.dart';
 import 'package:mlflutter/constants/language_constants.dart';
 import 'package:mlflutter/features/language/language_process.dart';
 
-class TranscribePage extends StatelessWidget {
+class Transcribe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

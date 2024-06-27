@@ -10,17 +10,17 @@ class PageRouter {
   static Widget getPage(int selectedIndex) {
     switch (selectedIndex) {
       case 0:
-        return HomePage();
+        return Intro();
       case 1:
-        return TranscribePage();
+        return Transcribe();
       case 2:
-        return TranslatePage();
+        return Translate();
       case 3:
-        return VisionPage();
+        return Vision();
       case 4:
-        return LogPage();
+        return Log();
       default:
-        return HomePage();
+        return Intro();
     }
   }
 }
