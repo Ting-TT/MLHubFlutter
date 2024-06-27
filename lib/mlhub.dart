@@ -4,24 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:mlflutter/constants/app_constants.dart';
-import 'package:mlflutter/navigation/navigation_drawer.dart';
+import 'package:mlflutter/navigation/drawer.dart';
 import 'package:mlflutter/navigation/page_router.dart';
-
-class MLHub extends ConsumerWidget {
-  const MLHub({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      title: 'MLFlutter',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MLHubMainPage(),
-    );
-  }
-}
 
 class MLHubMainPage extends ConsumerStatefulWidget {
   const MLHubMainPage({super.key});

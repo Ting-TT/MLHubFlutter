@@ -12,23 +12,23 @@ import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path_lib;
 
 import 'package:mlflutter/constants/language_constants.dart';
-import 'package:mlflutter/features/log/log_panel.dart';
+import 'package:mlflutter/features/log.dart';
 import 'package:mlflutter/utils/save_file.dart';
 import 'package:mlflutter/widgets/language_selection.dart';
 import 'package:mlflutter/widgets/item_selection.dart';
 import 'package:mlflutter/widgets/file_drop.dart';
 import 'package:mlflutter/widgets/processing_overlay.dart';
 
-class LanguageProcessPage extends StatefulWidget {
+class LanguageProcess extends StatefulWidget {
   final ProcessType processType;
 
-  const LanguageProcessPage({super.key, required this.processType});
+  const LanguageProcess({super.key, required this.processType});
 
   @override
-  LanguageProcessPageState createState() => LanguageProcessPageState();
+  LanguageProcessState createState() => LanguageProcessState();
 }
 
-class LanguageProcessPageState extends State<LanguageProcessPage> {
+class LanguageProcessState extends State<LanguageProcess> {
   bool _isRunning = false; // Track whether the command is running
   bool _cancelled = false; // Track whether the command is cancelled
   Process? _runningProcess; // Control the process running

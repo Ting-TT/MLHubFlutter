@@ -36,7 +36,7 @@ class TranscribePage extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
-        child: const LanguageProcessPage(processType: ProcessType.transcribe),
+        child: const LanguageProcess(processType: ProcessType.transcribe),
       ),
     );
   }

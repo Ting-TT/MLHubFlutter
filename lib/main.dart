@@ -28,7 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:mlflutter/app.dart';
+import 'package:mlflutter/home.dart';
 
 // Check if this is a production (--release) version.
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -44,7 +44,7 @@ void main() async {
   WindowManager.instance.setMinimumSize(const Size(700, 500));
   runApp(
     const ProviderScope(
-      child: MLHub(),
+      child: Home(),
     ),
   ); // Run the app with ProviderScope for state management
 }

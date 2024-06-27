@@ -36,7 +36,7 @@ class TranslatePage extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
-        child: const LanguageProcessPage(processType: ProcessType.translate),
+        child: const LanguageProcess(processType: ProcessType.translate),
       ),
     );
   }

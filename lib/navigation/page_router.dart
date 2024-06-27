@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:mlflutter/features/home_panel.dart';
-import 'package:mlflutter/features/language/transcibe/transcibe_panel.dart';
-import 'package:mlflutter/features/language/translate/translate_panel.dart';
-import 'package:mlflutter/features/log/log_panel.dart';
+import 'package:mlflutter/features/intro.dart';
+import 'package:mlflutter/features/language/transcibe.dart';
+import 'package:mlflutter/features/language/translate.dart';
+import 'package:mlflutter/features/log.dart';
 import 'package:mlflutter/features/vision/vision_panel.dart';
 
 class PageRouter {
