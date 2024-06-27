@@ -3,9 +3,6 @@ import 'package:mlflutter/widgets/item_selection.dart';
 // Define an enum to differentiate the modes
 enum ProcessType { transcribe, translate }
 
-// Flag to track if a process is running
-bool isProcessRunning = false;
-
 String selectedModel = 'OpenAI';
 String selectedFormat = 'txt';
 String? selectedInputLanguage = 'Not specified';

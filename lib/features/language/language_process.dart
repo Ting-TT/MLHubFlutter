@@ -29,9 +29,11 @@ class LanguageProcess extends StatefulWidget {
 }
 
 class LanguageProcessState extends State<LanguageProcess> {
-  bool _isRunning = false; // Track whether the command is running
+  bool _isProcessing =
+      false; // Track whether ml command is running, so whether to display the processing overlay
   bool _cancelled = false; // Track whether the command is cancelled
   Process? _runningProcess; // Control the process running
+  bool _isProcessRunning = false; //  Track whether a process is running
   String dropAreaText = '';
   List<XFile> droppedFiles = []; // Store the paths of dropped files
   final TextEditingController _outputController = TextEditingController();
@@ -45,8 +47,6 @@ class LanguageProcessState extends State<LanguageProcess> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Building with _isRunning: $_isRunning');
-
     return Scaffold(
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
@@ -60,10 +60,10 @@ class LanguageProcessState extends State<LanguageProcess> {
                     ref,
                   ), // Apply padding only to main content
                 ),
-                if (_isRunning)
+                if (_isProcessing)
                   ProcessingOverlay(
                     onCancel: () => cancelOperation(ref),
-                  ), // Present a processing page
+                  ), // Present a processing page as the ml command is running
               ],
             );
           },
@@ -134,7 +134,7 @@ class LanguageProcessState extends State<LanguageProcess> {
             const SizedBox(width: 10.0),
             ElevatedButton(
               onPressed: () => _runOrNot(ref),
-              child: _isRunning ? const Text('Running') : const Text('Run'),
+              child: const Text('Run'),
             ),
           ],
         ),
@@ -243,23 +243,21 @@ class LanguageProcessState extends State<LanguageProcess> {
       return;
     }
 
-    if (!_isRunning) {
-      var mimeType = lookupMimeType(droppedFiles.first.path);
-      if (mimeType != null &&
-          (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
-        setState(() => _isRunning = true);
-        runExternalCommand(droppedFiles.first.path, ref).then((_) {
-          if (mounted) {
-            setState(() => _isRunning = false);
-          }
-        });
-      } else {
+    var mimeType = lookupMimeType(droppedFiles.first.path);
+    if (mimeType != null &&
+        (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
+      setState(() => _isProcessing = true);
+      runExternalCommand(droppedFiles.first.path, ref).then((_) {
         if (mounted) {
-          setState(() {
-            _outputController.text =
-                "Input file doesn't look like an audio or video file, please check the input file type.";
-          });
+          setState(() => _isProcessing = false);
         }
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          _outputController.text =
+              "Input file doesn't look like an audio or video file, please check the input file type.";
+        });
       }
     }
   }
@@ -280,10 +278,10 @@ class LanguageProcessState extends State<LanguageProcess> {
   }
 
   Future<void> runExternalCommand(String filePath, WidgetRef ref) async {
-    if (isProcessRunning) {
+    if (_isProcessRunning) {
       return; // Prevent a new process if one is already running
     }
-    isProcessRunning = true; // Mark that a process is now running
+    _isProcessRunning = true; // Mark that a process is now running
     _cancelled = false; // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
@@ -333,7 +331,7 @@ class LanguageProcessState extends State<LanguageProcess> {
     } finally {
       // Ensure _runningProcess is cleared and mark that no process is running
       _runningProcess = null;
-      isProcessRunning = false;
+      _isProcessRunning = false;
     }
   }
 
@@ -347,8 +345,8 @@ class LanguageProcessState extends State<LanguageProcess> {
         if (mounted) {
           setState(() {
             // Reset the UI and flags only after the process has actually terminated
-            _isRunning = false;
-            isProcessRunning = false;
+            _isProcessing = false;
+            _isProcessRunning = false;
             _outputController.text = 'Operation cancelled.';
             _runningProcess = null;
           });
@@ -359,8 +357,8 @@ class LanguageProcessState extends State<LanguageProcess> {
           setState(() {
             _outputController.text = 'Error cancelling the operation: $error';
             // Ensure flags are reset even if there's an error
-            _isRunning = false;
-            isProcessRunning = false;
+            _isProcessing = false;
+            _isProcessRunning = false;
             _runningProcess = null;
           });
         }
