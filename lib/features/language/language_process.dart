@@ -133,8 +133,14 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
             ),
             const SizedBox(width: 10.0),
             ElevatedButton(
-              onPressed: () => _runOrNot(ref),
-              child: _isRunning ? const Text('Running') : const Text('Run'),
+              onPressed: droppedFiles.isNotEmpty ? () => _runOrNot(ref) : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    droppedFiles.isNotEmpty ? null : Colors.grey,
+                foregroundColor:
+                    droppedFiles.isNotEmpty ? null : Colors.black45,
+              ),
+              child: const Text('Run'),
             ),
           ],
         ),
@@ -217,32 +223,7 @@ class LanguageProcessPageState extends State<LanguageProcessPage> {
     );
   }
 
-  // TODO(ting): disable "run" button rather than showing alert
   void _runOrNot(WidgetRef ref) {
-    if (droppedFiles.isEmpty) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Input File Missing'),
-            content: const Text(
-              'Please provide an audio or video file first, either drag-and-drop or Choose File.',
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-
-      return;
-    }
-
     if (!_isRunning) {
       var mimeType = lookupMimeType(droppedFiles.first.path);
       if (mimeType != null &&
