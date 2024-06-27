@@ -25,7 +25,7 @@ class AppNavigationDrawer extends StatelessWidget {
             children: _createDrawerItems(context),
           ),
         ),
-        logButton(context, () => onDestinationSelected(5), selectedIndex == 5),
+        logButton(context, () => onDestinationSelected(4), selectedIndex == 4),
         aboutButton(context, appVersion),
         versionLabel(appVersion),
       ],
