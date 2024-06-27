@@ -35,11 +35,16 @@ class AppNavigationDrawer extends StatelessWidget {
   List<Widget> _createDrawerItems(BuildContext context) {
     return [
       _drawerItem(context, Icons.home, 'Home', 0),
-      _drawerItem(context, Icons.language, 'Language', 1),
-      _drawerItem(context, Icons.transcribe, 'Transcribe', 2, indent: 32),
-      _drawerItem(context, Icons.translate, 'Translate', 3, indent: 32),
-      _drawerItem(context, Icons.visibility, 'Vision', 4),
-      // Index 5 is used for logButton
+      ExpansionTile(
+        leading: const Icon(Icons.language),
+        title: const Text('Language'),
+        children: [
+          _drawerItem(context, Icons.transcribe, 'Transcribe', 1, indent: 30.0),
+          _drawerItem(context, Icons.translate, 'Translate', 2, indent: 30.0),
+        ],
+      ),
+      _drawerItem(context, Icons.visibility, 'Vision', 3),
+      // Index 4 is used for logButton
       // Add more items as needed
     ];
   }

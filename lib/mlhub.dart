@@ -37,21 +37,20 @@ class _MLHubMainPageState extends ConsumerState<MLHubMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          SizedBox(
-            width: sidebarWidth,
-            child: AppNavigationDrawer(
-              selectedIndex: selectedIndex,
-              onDestinationSelected: _onDestinationSelected,
-              appVersion: appVersion,
-            ),
+      drawer: SizedBox(
+        width: sidebarWidth,
+        child: Drawer(
+          child: AppNavigationDrawer(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: _onDestinationSelected,
+            appVersion: appVersion,
           ),
-          Expanded(
-            child: PageRouter.getPage(selectedIndex),
-          ),
-        ],
+        ),
       ),
+      appBar: AppBar(
+        title: const Text('MLHub'),
+      ),
+      body: PageRouter.getPage(selectedIndex),
     );
   }
 }

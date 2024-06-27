@@ -11,13 +11,13 @@ class PageRouter {
     switch (selectedIndex) {
       case 0:
         return HomePage();
-      case 2:
+      case 1:
         return TranscribePage();
-      case 3:
+      case 2:
         return TranslatePage();
-      case 4:
+      case 3:
         return VisionPage();
-      case 5:
+      case 4:
         return LogPage();
       default:
         return HomePage();

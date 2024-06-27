@@ -1,4 +1,4 @@
-const double sidebarWidth = 180;
+const double sidebarWidth = 200;
 
 int selectedIndex = 0;
 
