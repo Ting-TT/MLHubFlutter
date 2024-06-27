@@ -41,7 +41,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
-  WindowManager.instance.setMinimumSize(const Size(700, 500));
+  WindowManager.instance.setMinimumSize(const Size(700, 600));
   runApp(
     const ProviderScope(
       child: Home(),

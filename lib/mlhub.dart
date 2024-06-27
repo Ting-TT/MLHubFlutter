@@ -49,6 +49,7 @@ class _MLHubMainPageState extends ConsumerState<MLHubMainPage> {
       ),
       appBar: AppBar(
         title: const Text('MLHub'),
+        toolbarHeight: toolbarHeight,
       ),
       body: PageRouter.getPage(selectedIndex),
     );
