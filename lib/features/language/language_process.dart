@@ -1,7 +1,7 @@
 /// The layout for processing language tasks which can be used for both
 /// transcribe page and translate page.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -20,7 +20,9 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang
+/// Authors: Ting Tang, Graham Williams
+
+// TODO 20240622 gjw FILE TOO LONG. USE A MORE STRUCTURED APPROACH.
 
 library;
 
@@ -64,10 +66,35 @@ class LanguageProcessState extends State<LanguageProcess> {
   List<XFile> droppedFiles = []; // Store the paths of dropped files
   final TextEditingController _outputController = TextEditingController();
 
+  // 20240622 ting Commented out fetchSupportedLanguages() function which
+  // fetches the list inputLanguageOptions using "ml supported openai" command
+  // and will get the most update-to-date version of what languages Whisper
+  // supports.  However, this function is commented out because it takes quite a
+  // few seconds to load the language list on the UI, so now we are back to use
+  // a predefined inputLanguageOptions list instead.
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchSupportedLanguages();
+  // }
+
+  // Future<void> fetchSupportedLanguages() async {
+  //   var result = await Process.run('ml', ['supported', 'openai']);
+  //   if (result.exitCode == 0) {
+  //     var languages = LineSplitter.split(result.stdout.toString()).toList();
+  //     if (mounted) { // Check if the widget is still in the widget tree
+  //       setState(() {
+  //         inputLanguageOptions.addAll(languages);
+  //       });
+  //     }
+  //   }
+  // }
+
   @override
   void dispose() {
-    _outputController
-        .dispose(); // Dispose of the controller when the widget is disposed
+    // Dispose of the controller when the widget is disposed
+    _outputController.dispose();
     super.dispose();
   }
 
@@ -327,6 +354,13 @@ class LanguageProcessState extends State<LanguageProcess> {
       var command =
           'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
 
+      // TODO 20240622 gjw ON OLIVE STARTING FROM GNOME SHELL PATH DOES NOT
+      // INCLUDE ~/.local/bin` WHERE ml IS INSTALLED. ON KADESH IT
+      // DOES. STARTING FROM TERMINAL ALL IS OKAY BECAUSE THE PATH IS SETUP
+      // OKAY. HOW TO HANDLE THIS?
+
+      // var command = 'printenv PATH';
+
       _runningProcess = await Process.start(
         '/bin/sh',
         ['-c', command],
@@ -336,13 +370,25 @@ class LanguageProcessState extends State<LanguageProcess> {
       updateLog(ref, 'Command executed:\n$command', includeTimestamp: true);
 
       // Capture the stdout and trim it to remove leading/trailing whitespace.
+      
+      // TODO 20240622 gjw DO WE ALSO NEED TO BE COLLECTING stderr OUTPUT TO
+      // REPORT AN ERROR. ALSO NOTING THE COMMENT IN
+      // https://api.flutter.dev/flutter/dart-io/Process/start.html STATING "Users
+      // must read all data coming on the stdout and stderr streams of processes
+      // started with Process.start. If the user does not read all data on the
+      // streams the underlying system resources will not be released since there
+      // is still pending data."
+
       String completeOutput = '';
       await for (var output
           in _runningProcess!.stdout.transform(utf8.decoder)) {
         if (_cancelled) break; // Stop processing if cancelled
         completeOutput += output;
       }
+
+      // TODO 20240622 gjw CAN WE ALSO CAPTURE THE
       if (_cancelled) return;
+      
       if (mounted) {
         setState(() {
           _outputController.text = completeOutput.trim();
