@@ -1,4 +1,4 @@
-/// Entry point for the mlflutter app.
+/// Entry point for the MLFlutter app, setting up necessary configurations.
 ///
 /// Copyright (C) 2024 The Authors
 ///
@@ -20,9 +20,10 @@
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
 /// Authors: Ting Tang, Graham Williams
-///
+
 library;
 
+// Group imports by dart, flutter, packages, local. Then alphabetically.
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
