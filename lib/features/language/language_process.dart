@@ -370,7 +370,7 @@ class LanguageProcessState extends State<LanguageProcess> {
       updateLog(ref, 'Command executed:\n$command', includeTimestamp: true);
 
       // Capture the stdout and trim it to remove leading/trailing whitespace.
-      
+
       // TODO 20240622 gjw DO WE ALSO NEED TO BE COLLECTING stderr OUTPUT TO
       // REPORT AN ERROR. ALSO NOTING THE COMMENT IN
       // https://api.flutter.dev/flutter/dart-io/Process/start.html STATING "Users
@@ -388,7 +388,7 @@ class LanguageProcessState extends State<LanguageProcess> {
 
       // TODO 20240622 gjw CAN WE ALSO CAPTURE THE
       if (_cancelled) return;
-      
+
       if (mounted) {
         setState(() {
           _outputController.text = completeOutput.trim();
