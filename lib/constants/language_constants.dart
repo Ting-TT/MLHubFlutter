@@ -1,6 +1,6 @@
 /// This file contains the constants for language processing tasks.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///

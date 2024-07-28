@@ -1,6 +1,6 @@
 /// Introduction page for the mlflutter app.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///

@@ -1,6 +1,6 @@
 /// The log page capturing the executed ML commands and the outputs.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///

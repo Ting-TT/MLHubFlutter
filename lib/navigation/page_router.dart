@@ -1,6 +1,6 @@
 /// Routes pages based on the selected index for displaying the body part of the MLFlutter app.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///

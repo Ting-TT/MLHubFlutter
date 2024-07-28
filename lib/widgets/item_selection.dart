@@ -1,6 +1,6 @@
 /// This helps to display a list of selectable buttons.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///

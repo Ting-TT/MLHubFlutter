@@ -1,6 +1,6 @@
 /// The overlay widget to display when some function is processing.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
