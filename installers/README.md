@@ -1,9 +1,9 @@
-# MLFlutter Installers
+# MLHub Installers
 
 Flutter supports multiple platform targets and the app will run native
 on Android, iOS, Linux, MacOS, and Windows, as well as directly in a
 browser from the web. While the Flutter functionality is in theory identical
-across all platforms, mlflutter relies on mlhub packages being
+across all platforms, mlhub relies on mlhub packages being
 available on the platform. At present we only support dekstops (Linux,
 MacOS, and Windows).
 
@@ -21,43 +21,42 @@ ml configure openai
 
 ## Linux tar Archive
 
-+ Download [mlflutter.tar.gz](https://access.togaware.com/mlflutter.tar.gz)
+Download [mlflutter.tar.gz](https://access.togaware.com/mlflutter.tar.gz)
+
+To try it out:
 
 ```bash
 wget https://access.togaware.com/mlflutter.tar.gz
-```
-
-Then, to simply try it out locally:
-
-```bash
 tar zxvf mlflutter.tar.gz
-mlflutter/mlfutter)
+mlflutter/mlfutter
 ```
 
-Or, to install for the current user:
+To install for the local user and to make it known to Gnome and KDE,
+with a desktop icon:
 
 ```bash
+wget https://access.togaware.com/mlflutter.tar.gz
 tar zxvf mlflutter.tar.gz -C ${HOME}/.local/share/
-ln -s ${HOME}/.local/share/mlflutter/mlflutter ${HOME}/.local/bin
+ln -s ${HOME}/.local/share/mlflutter/mlflutter ${HOME}/.local/bin/mlhub
+wget https://raw.githubusercontent.com/gjwgit/mlflutter/dev/installers/mlhub.desktop -O ${HOME}/.local/share/applications/mlhub.desktop
+sed -i "s/USER/$(whoami)/g" ${HOME}/.local/share/applications/mlhub.desktop
+mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps/
+wget https://github.com/gjwgit/mlflutter/raw/dev/installers/mlhub.png -O ${HOME}/.local/share/icons/hicolor/256x256/apps/mlhub.png
 ```
 
-For this user, to install a desktop icon and make it known to Gnome
-and KDE:
+To install for any user on the computer:
 
 ```bash
-wget https://raw.githubusercontent.com/gjwgit/mlflutter/dev/installers/mlflutter.desktop -O ${HOME}/.local/share/applications/mlflutter.desktop
-mkdir -p ${HOME}/.local/share/icons/hicolor/scalable/apps/
-wget https://raw.githubusercontent.com/gjwgit/mlflutter/dev/installers/mlflutter.svg -O ${HOME}/.local/share/icons/hicolor/scalable/apps/mlflutter.svg
-```
-
-Or, for a system-wide install:
-
-```bash
+wget https://access.togaware.com/mlflutter.tar.gz
 sudo tar zxvf mlflutter.tar.gz -C /opt/
-sudo ln -s /opt/mlflutter/mlflutter /usr/local/bin/
+sudo ln -s /opt/mlflutter/mlflutter /usr/local/bin/mlhub
 ``` 
 
-Once installed you can run the app as Alt-F2 and type `rattle` then
+The `rattle.desktop` and app icon can be installed into
+`/usr/local/share/applications/` and `/usr/local/share/icons/`
+respectively.
+
+Once installed you can run the app as Alt-F2 and type `mlhub` then
 Enter.
 
 ## MacOS

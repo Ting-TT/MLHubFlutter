@@ -1,4 +1,4 @@
-/// About button widget contains app related information(version number, authors, license).
+/// The Home widget, providing the main interface for the MLFlutter app.
 ///
 /// Copyright (C) 2024 The Authors
 ///
@@ -20,28 +20,27 @@
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
 /// Authors: Ting Tang
+///
 
 library;
 
 import 'package:flutter/material.dart';
 
-Widget aboutButton(BuildContext context, String appVersion) {
-  return ListTile(
-    leading: const Icon(Icons.info),
-    title: const Text('About'),
-    onTap: () => showAboutDialog(
-      context: context,
-      applicationVersion: 'Current version: $appVersion',
-      applicationLegalese: '© 2024 Authors',
-      children: const <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 15),
-          child: SelectableText(
-            'MLHub app provides you with easy access to the latest state of the art in AI, Machine Learning, and Data Science.\nVisit the MLHub Book at https://survivor.togaware.com/mlhub/',
-          ),
-        ),
-      ],
-    ),
-    selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-  );
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mlflutter/mlhub.dart';
+
+class Home extends ConsumerWidget {
+  const Home({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp(
+      title: 'MLFlutter',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MLHubMainPage(),
+    );
+  }
 }

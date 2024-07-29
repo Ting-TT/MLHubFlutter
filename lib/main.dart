@@ -1,4 +1,4 @@
-/// Entry point for the mlflutter app.
+/// Entry point for the MLFlutter app, setting up necessary configurations.
 ///
 /// Copyright (C) 2024 The Authors
 ///
@@ -20,15 +20,16 @@
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
 /// Authors: Ting Tang, Graham Williams
-///
+
 library;
 
+// Group imports by dart, flutter, packages, local. Then alphabetically.
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'package:mlflutter/app.dart';
+import 'package:mlflutter/home.dart';
 
 // Check if this is a production (--release) version.
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -41,10 +42,10 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
-  WindowManager.instance.setMinimumSize(const Size(700, 500));
+  WindowManager.instance.setMinimumSize(const Size(700, 600));
   runApp(
     const ProviderScope(
-      child: MLHub(),
+      child: Home(),
     ),
   ); // Run the app with ProviderScope for state management
 }

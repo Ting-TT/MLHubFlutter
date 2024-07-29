@@ -1,6 +1,6 @@
-/// Introduction page for the mlflutter app.
+/// Vision page for the mlflutter app.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -23,18 +23,16 @@
 
 library;
 
-// Group imports by dart, flutter, packages, local. Then alphabetically.
-
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class Vision extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
         child: const Center(
-          child: Text('Welcome to MLHub Flutter App'),
+          child: Text('Computer Vision Page'),
         ),
       ),
     );

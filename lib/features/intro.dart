@@ -1,6 +1,6 @@
-/// Transcribe page for the mlflutter app.
+/// Introduction page for the mlflutter app.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -27,16 +27,15 @@ library;
 
 import 'package:flutter/material.dart';
 
-import 'package:mlflutter/constants/language_constants.dart';
-import 'package:mlflutter/features/language/language_process.dart';
-
-class TranscribePage extends StatelessWidget {
+class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
-        child: const LanguageProcessPage(processType: ProcessType.transcribe),
+        child: const Center(
+          child: Text('Welcome to MLHub Flutter App'),
+        ),
       ),
     );
   }

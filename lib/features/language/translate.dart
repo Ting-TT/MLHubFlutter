@@ -1,6 +1,6 @@
 /// Translate page for the mlflutter app.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -30,13 +30,13 @@ import 'package:flutter/material.dart';
 import 'package:mlflutter/constants/language_constants.dart';
 import 'package:mlflutter/features/language/language_process.dart';
 
-class TranslatePage extends StatelessWidget {
+class Translate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Theme.of(context).colorScheme.primaryContainer,
-        child: const LanguageProcessPage(processType: ProcessType.translate),
+        child: const LanguageProcess(processType: ProcessType.translate),
       ),
     );
   }
