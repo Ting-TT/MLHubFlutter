@@ -188,8 +188,7 @@ class LanguageProcessState extends State<LanguageProcess> {
             ElevatedButton(
               onPressed: droppedFiles.isNotEmpty ? () => _runOrNot(ref) : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    droppedFiles.isNotEmpty ? null : Colors.grey,
+                backgroundColor: droppedFiles.isNotEmpty ? null : Colors.grey,
                 foregroundColor:
                     droppedFiles.isNotEmpty ? null : Colors.black45,
               ),
