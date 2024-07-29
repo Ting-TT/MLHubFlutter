@@ -276,24 +276,23 @@ class LanguageProcessState extends State<LanguageProcess> {
     );
   }
 
+  // Check the input file type and run the command if it's an audio or video file
   void _runOrNot(WidgetRef ref) {
-    if (!_isRunning) {
-      var mimeType = lookupMimeType(droppedFiles.first.path);
-      if (mimeType != null &&
-          (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
-        setState(() => _isRunning = true);
-        runExternalCommand(droppedFiles.first.path, ref).then((_) {
-          if (mounted) {
-            setState(() => _isRunning = false);
-          }
-        });
-      } else {
+    var mimeType = lookupMimeType(droppedFiles.first.path);
+    if (mimeType != null &&
+        (mimeType.startsWith('audio/') || mimeType.startsWith('video/'))) {
+      setState(() => _isProcessing = true);
+      runExternalCommand(droppedFiles.first.path, ref).then((_) {
         if (mounted) {
-          setState(() {
-            _outputController.text =
-                "Input file doesn't look like an audio or video file, please check the input file type.";
-          });
+          setState(() => _isProcessing = false);
         }
+      });
+    } else {
+      if (mounted) {
+        setState(() {
+          _outputController.text =
+              "Input file doesn't look like an audio or video file, please check the input file type.";
+        });
       }
     }
   }
