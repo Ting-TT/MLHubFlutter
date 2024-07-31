@@ -109,14 +109,13 @@ class LanguageProcessState extends State<LanguageProcess> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: buildMainContent(
-                    ref,
-                  ), // Apply padding only to main content
+                  child: 
+                  // Apply padding only to main content
+                  buildMainContent(ref), 
                 ),
+                // Present a processing page as the ml command is running
                 if (_isProcessing)
-                  ProcessingOverlay(
-                    onCancel: () => cancelOperation(ref),
-                  ), // Present a processing page as the ml command is running
+                  ProcessingOverlay(onCancel: () => cancelOperation(ref)), 
               ],
             );
           },
@@ -129,6 +128,7 @@ class LanguageProcessState extends State<LanguageProcess> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
+        // Models available.
         const Text('Models available:', style: TextStyle(fontSize: 18)),
         const SizedBox(height: 8.0),
         SelectionButtons(
@@ -136,6 +136,8 @@ class LanguageProcessState extends State<LanguageProcess> {
           onItemSelected: (model) => setState(() => selectedModel = model),
           items: models,
         ),
+        
+        // Output format options.
         const SizedBox(height: 16.0),
         const Text('Output format:', style: TextStyle(fontSize: 18)),
         const SizedBox(height: 8.0),
@@ -145,6 +147,8 @@ class LanguageProcessState extends State<LanguageProcess> {
           items: formats,
         ),
         const SizedBox(height: 16.0),
+
+        // Language options.
         Row(
           children: <Widget>[
             Expanded(
@@ -169,6 +173,8 @@ class LanguageProcessState extends State<LanguageProcess> {
           ],
         ),
         const SizedBox(height: 20.0),
+
+        // File uploading and processing area.
         Row(
           children: [
             const Text('Drop your file here:', style: TextStyle(fontSize: 18)),
@@ -206,6 +212,8 @@ class LanguageProcessState extends State<LanguageProcess> {
           },
         ),
         const SizedBox(height: 16.0),
+
+        // Output display and save-to-file button.
         Row(
           children: [
             const Text('Output:', style: TextStyle(fontSize: 18)),
@@ -309,7 +317,8 @@ class LanguageProcessState extends State<LanguageProcess> {
       if (mounted) {
         setState(() {
           _outputController.text =
-              "Input file doesn't look like an audio or video file, please check the input file type.";
+              'Input file does not look like an audio or video file, '
+              'please check the input file type.';
         });
       }
     }
@@ -338,19 +347,25 @@ class LanguageProcessState extends State<LanguageProcess> {
     _cancelled = false; // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
+
       String escapedFilePath = filePath.replaceAll(' ', '\\ ');
+
       // When selectedFormat is txt, do not add argument '-f txt'
       // because default ml command without '-f' specified will output text
       // one sentence per line which is more desired than whisper txt format.
+
       String formatCommand =
           selectedFormat == 'txt' ? '' : '-f $selectedFormat';
+
       String languageCommand = (selectedInputLanguage != null &&
               selectedInputLanguage != 'Not specified')
           ? '-l $selectedInputLanguage'
           : '';
+
       String operation = widget.processType == ProcessType.transcribe
           ? 'transcribe'
           : 'translate';
+
       var command =
           'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
 
@@ -366,6 +381,7 @@ class LanguageProcessState extends State<LanguageProcess> {
         ['-c', command],
         runInShell: true,
       );
+
       debugPrint('Command: $command');
       updateLog(ref, 'Command executed:\n$command', includeTimestamp: true);
 
@@ -380,6 +396,7 @@ class LanguageProcessState extends State<LanguageProcess> {
       // is still pending data."
 
       String completeOutput = '';
+
       await for (var output
           in _runningProcess!.stdout.transform(utf8.decoder)) {
         if (_cancelled) break; // Stop processing if cancelled
@@ -387,6 +404,7 @@ class LanguageProcessState extends State<LanguageProcess> {
       }
 
       // TODO 20240622 gjw CAN WE ALSO CAPTURE THE
+
       if (_cancelled) return;
 
       if (mounted) {
@@ -394,6 +412,7 @@ class LanguageProcessState extends State<LanguageProcess> {
           _outputController.text = completeOutput.trim();
         });
       }
+
       debugPrint(completeOutput.trim());
       updateLog(ref, 'Output:\n$completeOutput');
     } catch (e) {
