@@ -109,13 +109,13 @@ class LanguageProcessState extends State<LanguageProcess> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: 
-                  // Apply padding only to main content
-                  buildMainContent(ref), 
+                  child:
+                      // Apply padding only to main content
+                      buildMainContent(ref),
                 ),
                 // Present a processing page as the ml command is running
                 if (_isProcessing)
-                  ProcessingOverlay(onCancel: () => cancelOperation(ref)), 
+                  ProcessingOverlay(onCancel: () => cancelOperation(ref)),
               ],
             );
           },
@@ -136,7 +136,7 @@ class LanguageProcessState extends State<LanguageProcess> {
           onItemSelected: (model) => setState(() => selectedModel = model),
           items: models,
         ),
-        
+
         // Output format options.
         const SizedBox(height: 16.0),
         const Text('Output format:', style: TextStyle(fontSize: 18)),
