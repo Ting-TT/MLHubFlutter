@@ -7,6 +7,8 @@ numbers.
 
 ## 0.1.0 FUTURE
 
++ Disable the RUN button when no input file provided [0.0.10]
++ Restruct codes to have a clear code structure and easier to understand [0.0.9]
 + Fix the issue where the transcribe process is not cancelled properly [0.0.8]
 + Add a save button on the log page [0.0.7]
 + Add an alert popup window when no file is provided for transcription [0.0.6]
