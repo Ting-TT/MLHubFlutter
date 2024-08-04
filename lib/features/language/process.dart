@@ -41,6 +41,7 @@ import 'package:path/path.dart' as path_lib;
 
 import 'package:mlflutter/constants/language.dart';
 import 'package:mlflutter/features/log.dart';
+import 'package:mlflutter/utils/get_file_info.dart';
 import 'package:mlflutter/utils/save_file.dart';
 import 'package:mlflutter/widgets/language_selection.dart';
 import 'package:mlflutter/widgets/item_selection.dart';
@@ -62,8 +63,10 @@ class LanguageProcessState extends State<LanguageProcess> {
   bool _cancelled = false; // Track whether the command is cancelled
   Process? _runningProcess; // Control the process running
   bool _isProcessRunning = false; //  Track whether a process is running
-  String dropAreaText = '';
+  String dropAreaText =
+      'Drag and drop area'; // Text to display in the drop area
   List<XFile> droppedFiles = []; // Store the paths of dropped files
+  String fileInfo = ''; // Store the file information
   final TextEditingController _outputController = TextEditingController();
 
   // 20240622 ting Commented out fetchSupportedLanguages() function which
@@ -157,16 +160,20 @@ class LanguageProcessState extends State<LanguageProcess> {
         const SizedBox(height: 8.0),
         FileDropTarget(
           droppedFiles: droppedFiles,
-          onFilesDropped: (files) {
+          onFilesDropped: (files) async {
             setState(() {
               droppedFiles.clear();
               if (files.isNotEmpty) {
                 droppedFiles.add(files.last); // Add only the most recent file
               }
+            });
+            fileInfo = await getFileInfo(files.last);
+            setState(() {
               dropAreaText =
-                  'Selected file:\n${droppedFiles.map((file) => file.path).join('\n')}';
+                  'Selected file:\n${droppedFiles.last.path}\n$fileInfo';
             });
           },
+          dropAreaText: dropAreaText,
         ),
         const SizedBox(height: 16.0),
 
@@ -327,8 +334,12 @@ class LanguageProcessState extends State<LanguageProcess> {
         setState(() {
           droppedFiles.clear(); // Clear previous files
           droppedFiles.add(XFile(result.files.single.path!));
-          dropAreaText =
-              'Selected file:\n${droppedFiles.map((file) => file.path).join('\n')}';
+        });
+      }
+      fileInfo = await getFileInfo(droppedFiles.last);
+      if (mounted) {
+        setState(() {
+          dropAreaText = 'Selected file:\n${droppedFiles.last.path}\n$fileInfo';
         });
       }
     }
