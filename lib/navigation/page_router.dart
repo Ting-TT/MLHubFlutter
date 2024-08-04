@@ -1,4 +1,4 @@
-/// Entry point for the MLFlutter app, setting up necessary configurations.
+/// Routes pages based on the selected index for displaying the body part of the MLFlutter app.
 ///
 /// Copyright (C) 2024 The Authors
 ///
@@ -19,33 +19,33 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang, Graham Williams
+/// Authors: Ting Tang
 
 library;
 
-// Group imports by dart, flutter, packages, local. Then alphabetically.
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
+import 'package:mlflutter/features/intro.dart';
+import 'package:mlflutter/features/language/transcibe.dart';
+import 'package:mlflutter/features/language/translate.dart';
+import 'package:mlflutter/features/log.dart';
+import 'package:mlflutter/features/vision/vision.dart';
 
-import 'package:mlflutter/home.dart';
-
-// Check if this is a production (--release) version.
-const bool isProduction = bool.fromEnvironment('dart.vm.product');
-
-void main() async {
-  // In production do not display [debugPrint] messages.
-  if (isProduction) {
-    debugPrint = (String? message, {int? wrapWidth}) {};
+class PageRouter {
+  static Widget getPage(int selectedIndex) {
+    switch (selectedIndex) {
+      case 0:
+        return Intro();
+      case 1:
+        return Transcribe();
+      case 2:
+        return Translate();
+      case 3:
+        return Vision();
+      case 4:
+        return Log();
+      default:
+        return Intro();
+    }
   }
-
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  WindowManager.instance.setMinimumSize(const Size(700, 600));
-  runApp(
-    const ProviderScope(
-      child: Home(),
-    ),
-  ); // Run the app with ProviderScope for state management
 }

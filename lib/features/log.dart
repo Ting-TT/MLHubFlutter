@@ -1,6 +1,6 @@
 /// The log page capturing the executed ML commands and the outputs.
 ///
-/// Copyright (C) 2024 Authors
+/// Copyright (C) 2024 The Authors
 ///
 /// Licensed under the GNU General Public License, Version 3 (the "License");
 ///
@@ -42,12 +42,12 @@ void updateLog(WidgetRef ref, String message, {bool includeTimestamp = false}) {
   ref.read(logProvider.notifier).update((state) => [...state, logMessage]);
 }
 
-class LogPage extends ConsumerStatefulWidget {
+class Log extends ConsumerStatefulWidget {
   @override
-  LogPageState createState() => LogPageState();
+  LogState createState() => LogState();
 }
 
-class LogPageState extends ConsumerState<LogPage> {
+class LogState extends ConsumerState<Log> {
   @override
   Widget build(BuildContext context) {
     final logs = ref.watch(logProvider);

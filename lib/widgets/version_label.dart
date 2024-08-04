@@ -1,4 +1,4 @@
-/// Entry point for the MLFlutter app, setting up necessary configurations.
+/// The version label of the app.
 ///
 /// Copyright (C) 2024 The Authors
 ///
@@ -19,33 +19,18 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang, Graham Williams
+/// Authors: Ting Tang
 
 library;
 
-// Group imports by dart, flutter, packages, local. Then alphabetically.
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
-
-import 'package:mlflutter/home.dart';
-
-// Check if this is a production (--release) version.
-const bool isProduction = bool.fromEnvironment('dart.vm.product');
-
-void main() async {
-  // In production do not display [debugPrint] messages.
-  if (isProduction) {
-    debugPrint = (String? message, {int? wrapWidth}) {};
-  }
-
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  WindowManager.instance.setMinimumSize(const Size(700, 600));
-  runApp(
-    const ProviderScope(
-      child: Home(),
+Widget versionLabel(String version) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Text(
+      'Version: $version',
+      style: const TextStyle(color: Colors.grey),
     ),
-  ); // Run the app with ProviderScope for state management
+  );
 }

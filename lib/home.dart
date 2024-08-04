@@ -1,4 +1,4 @@
-/// Entry point for the MLFlutter app, setting up necessary configurations.
+/// The Home widget, providing the main interface for the MLFlutter app.
 ///
 /// Copyright (C) 2024 The Authors
 ///
@@ -19,33 +19,28 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang, Graham Williams
+/// Authors: Ting Tang
+///
 
 library;
 
-// Group imports by dart, flutter, packages, local. Then alphabetically.
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
+import 'package:mlflutter/mlhub.dart';
 
-import 'package:mlflutter/home.dart';
+class Home extends ConsumerWidget {
+  const Home({super.key});
 
-// Check if this is a production (--release) version.
-const bool isProduction = bool.fromEnvironment('dart.vm.product');
-
-void main() async {
-  // In production do not display [debugPrint] messages.
-  if (isProduction) {
-    debugPrint = (String? message, {int? wrapWidth}) {};
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp(
+      title: 'MLFlutter',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MLHubMainPage(),
+    );
   }
-
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  WindowManager.instance.setMinimumSize(const Size(700, 600));
-  runApp(
-    const ProviderScope(
-      child: Home(),
-    ),
-  ); // Run the app with ProviderScope for state management
 }
