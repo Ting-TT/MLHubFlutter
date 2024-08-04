@@ -26,7 +26,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-import 'package:mlflutter/constants/language_constants.dart';
+import 'package:mlflutter/constants/language.dart';
 
 class InputLanguageDropdown extends StatelessWidget {
   final String? selectedInputLanguage;
