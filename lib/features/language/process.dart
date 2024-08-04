@@ -39,7 +39,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path_lib;
 
-import 'package:mlflutter/constants/language_constants.dart';
+import 'package:mlflutter/constants/language.dart';
 import 'package:mlflutter/features/log.dart';
 import 'package:mlflutter/utils/save_file.dart';
 import 'package:mlflutter/widgets/language_selection.dart';
