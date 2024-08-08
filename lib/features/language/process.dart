@@ -139,26 +139,30 @@ class LanguageProcessState extends State<LanguageProcess> {
           onItemSelected: (model) => setState(() => selectedModel = model),
           items: models,
         ),
-
-        // Output format options.
-        const SizedBox(height: 16.0),
-        const Text('Output format:', style: TextStyle(fontSize: 18)),
-        const SizedBox(height: 8.0),
-        SelectionButtons(
-          selectedItem: selectedFormat,
-          onItemSelected: (format) => setState(() => selectedFormat = format),
-          items: formats,
-        ),
         const SizedBox(height: 16.0),
 
-        // Language options.
-        buildLanguageSelection(),
-        const SizedBox(height: 20.0),
+        // Output Format options and Language options for transcribe/translate.
+        if (widget.processType != ProcessType.identify) ...[
+          // Output Format options.
+          const Text('Output format:', style: TextStyle(fontSize: 18)),
+          const SizedBox(height: 8.0),
+          SelectionButtons(
+            selectedItem: selectedFormat,
+            onItemSelected: (format) => setState(() => selectedFormat = format),
+            items: formats,
+          ),
+          const SizedBox(height: 16.0),
+
+          // Language options.
+          buildLanguageSelection(),
+          const SizedBox(height: 20.0),
+        ],
 
         // File uploading and processing area.
         buildFileUploadAndRunButtons(ref),
         const SizedBox(height: 8.0),
         FileDropTarget(
+          height: widget.processType == ProcessType.identify ? 200.0 : 100.0,
           droppedFiles: droppedFiles,
           onFilesDropped: (files) async {
             setState(() {
@@ -356,24 +360,31 @@ class LanguageProcessState extends State<LanguageProcess> {
 
       String escapedFilePath = filePath.replaceAll(' ', '\\ ');
 
-      // When selectedFormat is txt, do not add argument '-f txt'
-      // because default ml command without '-f' specified will output text
-      // one sentence per line which is more desired than whisper txt format.
+      String command;
+      switch (widget.processType) {
+        case ProcessType.transcribe:
+        case ProcessType.translate:
+          // When selectedFormat is txt, do not add argument '-f txt'
+          // because default ml command without '-f' specified will output text
+          // one sentence per line which is more desired than whisper txt format.
+          String formatCommand =
+              selectedFormat == 'txt' ? '' : '-f $selectedFormat';
 
-      String formatCommand =
-          selectedFormat == 'txt' ? '' : '-f $selectedFormat';
+          String languageCommand = (selectedInputLanguage != null &&
+                  selectedInputLanguage != 'Not specified')
+              ? '-l $selectedInputLanguage'
+              : '';
 
-      String languageCommand = (selectedInputLanguage != null &&
-              selectedInputLanguage != 'Not specified')
-          ? '-l $selectedInputLanguage'
-          : '';
+          String operation = widget.processType == ProcessType.transcribe
+              ? 'transcribe'
+              : 'translate';
 
-      String operation = widget.processType == ProcessType.transcribe
-          ? 'transcribe'
-          : 'translate';
+          command =
+              'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
 
-      var command =
-          'ml $operation openai "$escapedFilePath" $languageCommand $formatCommand';
+        case ProcessType.identify:
+          command = 'ml identify openai "$escapedFilePath"';
+      }
 
       // TODO 20240622 gjw ON OLIVE STARTING FROM GNOME SHELL PATH DOES NOT
       // INCLUDE ~/.local/bin` WHERE ml IS INSTALLED. ON KADESH IT

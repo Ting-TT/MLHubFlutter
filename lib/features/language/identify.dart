@@ -1,4 +1,4 @@
-/// Routes pages based on the selected index for displaying the body part of the MLFlutter app.
+/// Identify the language of the input audio/video file.
 ///
 /// Copyright (C) 2024 The Authors
 ///
@@ -23,32 +23,21 @@
 
 library;
 
+// Group imports by dart, flutter, packages, local. Then alphabetically.
+
 import 'package:flutter/material.dart';
 
-import 'package:mlflutter/features/intro.dart';
-import 'package:mlflutter/features/language/identify.dart';
-import 'package:mlflutter/features/language/transcibe.dart';
-import 'package:mlflutter/features/language/translate.dart';
-import 'package:mlflutter/features/log.dart';
-import 'package:mlflutter/features/vision/vision.dart';
+import 'package:mlflutter/constants/language.dart';
+import 'package:mlflutter/features/language/process.dart';
 
-class PageRouter {
-  static Widget getPage(int selectedIndex) {
-    switch (selectedIndex) {
-      case 0:
-        return Intro();
-      case 1:
-        return Transcribe();
-      case 2:
-        return Translate();
-      case 3:
-        return Vision();
-      case 4:
-        return Log();
-      case 5:
-        return Identify();
-      default:
-        return Intro();
-    }
+class Identify extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        child: const LanguageProcess(processType: ProcessType.identify),
+      ),
+    );
   }
 }
