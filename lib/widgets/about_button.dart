@@ -26,10 +26,9 @@ library;
 import 'package:flutter/material.dart';
 
 Widget aboutButton(BuildContext context, String appVersion) {
-  return ListTile(
-    leading: const Icon(Icons.info),
-    title: const Text('About'),
-    onTap: () => showAboutDialog(
+  return IconButton(
+    icon: const Icon(Icons.info),
+    onPressed: () => showAboutDialog(
       context: context,
       applicationVersion: 'Current version: $appVersion',
       applicationLegalese: '© 2024 Authors',
@@ -42,6 +41,5 @@ Widget aboutButton(BuildContext context, String appVersion) {
         ),
       ],
     ),
-    selectedTileColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
   );
 }

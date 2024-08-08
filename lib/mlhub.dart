@@ -31,6 +31,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mlflutter/constants/app.dart';
 import 'package:mlflutter/navigation/drawer.dart';
 import 'package:mlflutter/navigation/page_router.dart';
+import 'package:mlflutter/widgets/about_button.dart';
 
 class MLHubMainPage extends ConsumerStatefulWidget {
   const MLHubMainPage({super.key});
@@ -76,6 +77,9 @@ class _MLHubMainPageState extends ConsumerState<MLHubMainPage> {
       appBar: AppBar(
         title: const Text('MLHub'),
         toolbarHeight: toolbarHeight,
+        actions: [
+          aboutButton(context, appVersion),
+        ],
       ),
       body: PageRouter.getPage(selectedIndex),
     );

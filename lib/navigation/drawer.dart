@@ -26,7 +26,6 @@ library;
 import 'package:flutter/material.dart';
 
 import 'package:mlflutter/widgets/log_button.dart';
-import 'package:mlflutter/widgets/about_button.dart';
 import 'package:mlflutter/widgets/version_label.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
@@ -51,7 +50,6 @@ class AppNavigationDrawer extends StatelessWidget {
           ),
         ),
         logButton(context, () => onDestinationSelected(4), selectedIndex == 4),
-        aboutButton(context, appVersion),
         versionLabel(appVersion),
       ],
     );
