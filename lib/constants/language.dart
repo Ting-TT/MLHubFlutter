@@ -26,7 +26,7 @@ library;
 import 'package:mlflutter/widgets/item_selection.dart';
 
 // Define an enum to differentiate the modes
-enum ProcessType { transcribe, translate }
+enum ProcessType { transcribe, translate, identify }
 
 String selectedModel = 'OpenAI';
 String selectedFormat = 'txt';

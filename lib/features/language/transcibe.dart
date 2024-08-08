@@ -1,4 +1,4 @@
-/// Transcribe page for the mlflutter app.
+/// Transcribe the input audio/video file.
 ///
 /// Copyright (C) 2024 The Authors
 ///

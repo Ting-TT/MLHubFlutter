@@ -1,4 +1,4 @@
-/// Translate page for the mlflutter app.
+/// Translate the input audio/video file.
 ///
 /// Copyright (C) 2024 The Authors
 ///
