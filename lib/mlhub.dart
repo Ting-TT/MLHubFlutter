@@ -69,7 +69,8 @@ class _MLHubMainPageState extends ConsumerState<MLHubMainPage> {
         child: Drawer(
           child: AppNavigationDrawer(
             selectedIndex: selectedIndex,
-            onDestinationSelected: (index) => _onDestinationSelected(index, context),
+            onDestinationSelected: (index) =>
+                _onDestinationSelected(index, context),
             appVersion: appVersion,
           ),
         ),
