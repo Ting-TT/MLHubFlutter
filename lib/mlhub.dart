@@ -53,10 +53,11 @@ class _MLHubMainPageState extends ConsumerState<MLHubMainPage> {
     });
   }
 
-  void _onDestinationSelected(int index) {
+  void _onDestinationSelected(int index, BuildContext context) {
     setState(() {
       selectedIndex = index;
     });
+    Navigator.pop(context);
   }
 
   @override
@@ -67,7 +68,7 @@ class _MLHubMainPageState extends ConsumerState<MLHubMainPage> {
         child: Drawer(
           child: AppNavigationDrawer(
             selectedIndex: selectedIndex,
-            onDestinationSelected: _onDestinationSelected,
+            onDestinationSelected: (index) => _onDestinationSelected(index, context),
             appVersion: appVersion,
           ),
         ),
