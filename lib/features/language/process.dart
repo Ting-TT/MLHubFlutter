@@ -152,59 +152,11 @@ class LanguageProcessState extends State<LanguageProcess> {
         const SizedBox(height: 16.0),
 
         // Language options.
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: InputLanguageDropdown(
-                selectedInputLanguage: selectedInputLanguage,
-                onChanged: (value) {
-                  setState(() => selectedInputLanguage = value);
-                },
-              ),
-            ),
-            if (widget.processType == ProcessType.translate) ...[
-              const SizedBox(width: 20.0),
-              Expanded(
-                child: OutputLanguageDropdown(
-                  selectedOutputLanguage: selectedOutputLanguage,
-                  onChanged: (value) {
-                    setState(() => selectedOutputLanguage = value);
-                  },
-                ),
-              ),
-            ],
-          ],
-        ),
+        buildLanguageSelection(),
         const SizedBox(height: 20.0),
 
         // File uploading and processing area.
-        Row(
-          children: [
-            const Text('Drop your file here:', style: TextStyle(fontSize: 18)),
-            const SizedBox(width: 10.0),
-            ElevatedButton(
-              onPressed: _pickFile,
-              style: ElevatedButton.styleFrom(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              ),
-              child: const Text('Choose File'),
-            ),
-            const SizedBox(width: 10.0),
-            ElevatedButton(
-              onPressed: droppedFiles.isNotEmpty ? () => _runOrNot(ref) : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: droppedFiles.isNotEmpty ? null : Colors.grey,
-                foregroundColor:
-                    droppedFiles.isNotEmpty ? null : Colors.black45,
-              ),
-              child: const Text('Run'),
-            ),
-          ],
-        ),
+        buildFileUploadAndRunButtons(ref),
         const SizedBox(height: 8.0),
         FileDropTarget(
           droppedFiles: droppedFiles,
@@ -226,67 +178,129 @@ class LanguageProcessState extends State<LanguageProcess> {
         const SizedBox(height: 16.0),
 
         // Output display and save-to-file button.
-        Row(
-          children: [
-            const Text('Output:', style: TextStyle(fontSize: 18)),
-            const SizedBox(width: 10.0),
-            ElevatedButton(
-              onPressed: _outputController.text.isNotEmpty
-                  ? () async {
-                      String defaultFileName =
-                          '${path_lib.basenameWithoutExtension(droppedFiles.first.path)}.$selectedFormat';
-                      String initialDirectory =
-                          path_lib.dirname(droppedFiles.first.path);
-                      String result = await saveToFile(
-                        content: _outputController.text,
-                        defaultFileName: defaultFileName,
-                        initialDirectory: initialDirectory,
-                      );
-                      if (mounted) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(result)));
-                      }
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    _outputController.text.isNotEmpty ? null : Colors.grey,
-                foregroundColor:
-                    _outputController.text.isNotEmpty ? null : Colors.black45,
-              ),
-              child: const Text('Save'),
-            ),
-          ],
-        ),
+        buildOutputLabelAndSaveButton(),
         const SizedBox(height: 8.0),
+        buildOutputDisplayBox(),
+      ],
+    );
+  }
+
+  Widget buildLanguageSelection() {
+    return Row(
+      children: <Widget>[
         Expanded(
-          child: Container(
-            margin: const EdgeInsets.only(bottom: 3.0),
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(4.0),
+          child: InputLanguageDropdown(
+            selectedInputLanguage: selectedInputLanguage,
+            onChanged: (value) {
+              setState(() => selectedInputLanguage = value);
+            },
+          ),
+        ),
+        if (widget.processType == ProcessType.translate) ...[
+          const SizedBox(width: 20.0),
+          Expanded(
+            child: OutputLanguageDropdown(
+              selectedOutputLanguage: selectedOutputLanguage,
+              onChanged: (value) {
+                setState(() => selectedOutputLanguage = value);
+              },
             ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 200),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: TextFormField(
-                  controller: _outputController,
-                  readOnly: true,
-                  maxLines: null, // Allows for any number of lines
-                  keyboardType: TextInputType.multiline,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.all(8),
-                  ),
-                ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget buildFileUploadAndRunButtons(WidgetRef ref) {
+    return Row(
+      children: [
+        const Text('Drop your file here:', style: TextStyle(fontSize: 18)),
+        const SizedBox(width: 10.0),
+        ElevatedButton(
+          onPressed: _pickFile,
+          style: ElevatedButton.styleFrom(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          ),
+          child: const Text('Choose File'),
+        ),
+        const SizedBox(width: 10.0),
+        ElevatedButton(
+          onPressed: droppedFiles.isNotEmpty ? () => _runOrNot(ref) : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: droppedFiles.isNotEmpty ? null : Colors.grey,
+            foregroundColor: droppedFiles.isNotEmpty ? null : Colors.black45,
+          ),
+          child: const Text('Run'),
+        ),
+      ],
+    );
+  }
+
+  Widget buildOutputLabelAndSaveButton() {
+    return Row(
+      children: [
+        const Text('Output:', style: TextStyle(fontSize: 18)),
+        const SizedBox(width: 10.0),
+        ElevatedButton(
+          onPressed: _outputController.text.isNotEmpty
+              ? () async {
+                  String defaultFileName =
+                      '${path_lib.basenameWithoutExtension(droppedFiles.first.path)}.$selectedFormat';
+                  String initialDirectory =
+                      path_lib.dirname(droppedFiles.first.path);
+                  String result = await saveToFile(
+                    content: _outputController.text,
+                    defaultFileName: defaultFileName,
+                    initialDirectory: initialDirectory,
+                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(result)));
+                  }
+                }
+              : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor:
+                _outputController.text.isNotEmpty ? null : Colors.grey,
+            foregroundColor:
+                _outputController.text.isNotEmpty ? null : Colors.black45,
+          ),
+          child: const Text('Save'),
+        ),
+      ],
+    );
+  }
+
+  Widget buildOutputDisplayBox() {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 3.0),
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 200),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: TextFormField(
+              controller: _outputController,
+              readOnly: true,
+              maxLines: null, // Allows for any number of lines
+              keyboardType: TextInputType.multiline,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.all(8),
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
