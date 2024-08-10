@@ -7,6 +7,10 @@ numbers.
 
 ## 0.1.0 FUTURE
 
++ Add a new functionality "Identify" under "Language" which can identify the language of an audio/video file [0.0.14]
++ Auto-close the Navigation Drawer after choosing the destination [0.0.13]
++ Refactor the long method to improve readability of the codes [0.0.12]
++ Display the file information like file size, audio/video length [0.0.11]
 + Disable the RUN button when no input file provided [0.0.10]
 + Restruct codes to have a clear code structure and easier to understand [0.0.9]
 + Fix the issue where the transcribe process is not cancelled properly [0.0.8]
