@@ -333,6 +333,16 @@ class ColorizationProcessState extends ConsumerState<Colorization> {
         );
       });
     }
+
+    // Validation for file or URL after path generation
+    if (outputImagePath == null || !File(outputImagePath!).existsSync()) {
+      errorOccurred = true;
+      outputMessage =
+          'URL or file invalid. Please ensure your input is a valid image.';
+    } else {
+      outputMessage =
+          'Output image(s) successfully saved to: ${colorizationState.selectedOutputDirectory}';
+    }
   }
 
   Future<void> _generateListForFolderImages(
@@ -359,6 +369,18 @@ class ColorizationProcessState extends ConsumerState<Colorization> {
         );
         outputImages!.add(File(outputPath));
       }
+    }
+
+    // Validation for output images after generation
+    if (outputImages!.isEmpty ||
+        !outputImages!
+            .every((outputImage) => File(outputImage.path).existsSync())) {
+      errorOccurred = true;
+      outputMessage =
+          'Please ensure that the selected folder contains only images.';
+    } else {
+      outputMessage =
+          'Output image(s) successfully saved to: ${colorizationState.selectedOutputDirectory}';
     }
   }
 
@@ -440,35 +462,11 @@ class ColorizationProcessState extends ConsumerState<Colorization> {
       updateLog(ref, 'Output:\n$output');
       debugPrint('Output:\n$output');
 
-      // Generate the path or list for displaying images
+      // Generate the list or path for displaying images and outputMessage
       if (colorizationState.selectedType == 'Folder') {
         await _generateListForFolderImages(colorizationState);
       } else {
         await _generateOutputImagePath(colorizationState);
-      }
-
-      // Validate output
-      if (colorizationState.selectedType == 'Folder') {
-        if (outputImages == null ||
-            outputImages!.isEmpty ||
-            !outputImages!
-                .every((outputImage) => File(outputImage.path).existsSync())) {
-          errorOccurred = true;
-          outputMessage =
-              'Please ensure that the selected folder contains only images.';
-        } else {
-          outputMessage =
-              'Output image(s) successfully saved to: ${colorizationState.selectedOutputDirectory}';
-        }
-      } else {
-        if (outputImagePath == null || !File(outputImagePath!).existsSync()) {
-          errorOccurred = true;
-          outputMessage =
-              'URL or file invalid. Please ensure your input is a valid image.';
-        } else {
-          outputMessage =
-              'Output image(s) successfully saved to: ${colorizationState.selectedOutputDirectory}';
-        }
       }
     } finally {
       _runningProcess = null; // Reset the running process
