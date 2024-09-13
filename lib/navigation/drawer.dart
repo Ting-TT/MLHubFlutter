@@ -67,9 +67,22 @@ class AppNavigationDrawer extends StatelessWidget {
           _drawerItem(context, Icons.translate, 'Translate', 2, indent: 30.0),
         ],
       ),
-      _drawerItem(context, Icons.visibility, 'Vision', 3),
+      ExpansionTile(
+        leading: const Icon(Icons.visibility),
+        title: const Text('Vision'),
+        children: [
+          _drawerItem(context, Icons.colorize, 'Colorization', 3, indent: 30.0),
+          _drawerItem(
+            context,
+            Icons.directions_car,
+            'Identify Cars',
+            6,
+            indent: 30.0,
+          ),
+        ],
+      ),
       // Index 4 is used for logButton
-      // Add more items as needed, next index to use: 6
+      // Add more items as needed, next index to use: 7
     ];
   }
 

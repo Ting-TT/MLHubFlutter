@@ -393,7 +393,6 @@ class LanguageProcessState extends ConsumerState<LanguageProcess> {
     _cancelled = false; // Reset the cancellation flag
     try {
       // Escape spaces in the filePath
-
       String escapedFilePath = filePath.replaceAll(' ', '\\ ');
 
       String command;

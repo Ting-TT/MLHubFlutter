@@ -30,7 +30,8 @@ import 'package:mlflutter/features/language/identify.dart';
 import 'package:mlflutter/features/language/transcibe.dart';
 import 'package:mlflutter/features/language/translate.dart';
 import 'package:mlflutter/features/log.dart';
-import 'package:mlflutter/features/vision/vision.dart';
+import 'package:mlflutter/features/vision/car.dart';
+import 'package:mlflutter/features/vision/colorization.dart';
 
 class PageRouter {
   static Widget getPage(int selectedIndex) {
@@ -42,11 +43,13 @@ class PageRouter {
       case 2:
         return Translate();
       case 3:
-        return Vision();
+        return const Colorization();
       case 4:
         return Log();
       case 5:
         return Identify();
+      case 6:
+        return CarsIdentification();
       default:
         return Intro();
     }
