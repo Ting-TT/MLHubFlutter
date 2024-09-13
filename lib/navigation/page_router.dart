@@ -19,7 +19,7 @@
 // You should have received a copy of the GNU General Public License along with
 // this program.  If not, see <https://www.gnu.org/licenses/>.
 ///
-/// Authors: Ting Tang
+/// Authors: Ting Tang, Graham Williams
 
 library;
 
@@ -32,6 +32,7 @@ import 'package:mlflutter/features/language/translate.dart';
 import 'package:mlflutter/features/log.dart';
 import 'package:mlflutter/features/vision/car.dart';
 import 'package:mlflutter/features/vision/colorization.dart';
+import 'package:mlflutter/features/vision/deface.dart';
 
 class PageRouter {
   static Widget getPage(int selectedIndex) {
@@ -50,6 +51,8 @@ class PageRouter {
         return Identify();
       case 6:
         return CarsIdentification();
+      case 7:
+        return Deface();
       default:
         return Intro();
     }

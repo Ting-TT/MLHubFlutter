@@ -71,7 +71,14 @@ class AppNavigationDrawer extends StatelessWidget {
         leading: const Icon(Icons.visibility),
         title: const Text('Vision'),
         children: [
-          _drawerItem(context, Icons.colorize, 'Colorization', 3, indent: 30.0),
+          _drawerItem(context, Icons.colorize, 'Colorize', 3, indent: 30.0),
+          _drawerItem(
+            context,
+            Icons.face_retouching_natural,
+            'Deface',
+            7,
+            indent: 30.0,
+          ),
           _drawerItem(
             context,
             Icons.directions_car,
