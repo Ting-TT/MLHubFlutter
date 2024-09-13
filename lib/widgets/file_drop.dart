@@ -58,7 +58,7 @@ class FileDropTarget extends StatelessWidget {
           }
         },
         child: Center(
-          child: Text(
+          child: SelectableText(
             dropAreaText,
             style: droppedFiles.isEmpty
                 ? const TextStyle(color: Colors.grey)
