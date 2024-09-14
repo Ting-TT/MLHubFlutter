@@ -50,6 +50,8 @@ class PageRouter {
         return Identify();
       case 6:
         return CarsIdentification();
+      case 8:
+        return Ollama();
       default:
         return Intro();
     }

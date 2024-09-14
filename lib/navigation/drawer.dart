@@ -62,6 +62,7 @@ class AppNavigationDrawer extends StatelessWidget {
         leading: const Icon(Icons.language),
         title: const Text('Language'),
         children: [
+          _drawerItem(context, Icons.chat, 'Chat', 8, indent: 30.0),
           _drawerItem(context, Icons.search, 'Identify', 5, indent: 30.0),
           _drawerItem(context, Icons.transcribe, 'Transcribe', 1, indent: 30.0),
           _drawerItem(context, Icons.translate, 'Translate', 2, indent: 30.0),
