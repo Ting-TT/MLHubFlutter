@@ -23,32 +23,6 @@
 
 library;
 
-// import 'package:flutter/material.dart';
-
-// class Deface extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Container(
-//         color: Theme.of(context).colorScheme.primaryContainer,
-//         child: Center(
-//           child: Column(
-//             children: [
-//               const Text('Deface Images - Not Yet Implemented'),
-//               const SizedBox(height: 100), // Add space between Text and Image
-//               Image.network(
-//                 'https://linuxtldr.com/wp-content/uploads/2024/02/Defacing-faces-with-blur-effect.webp', // Replace with your image URL
-//                 width: 500, // Adjust width and height
-//                 //height: 300,
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -58,8 +32,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:mlflutter/features/log.dart';
-import 'package:mlflutter/providers/deface.dart.~3~';
+import 'package:mlflutter/providers/deface.dart';
 import 'package:mlflutter/utils/check_image.dart';
+import 'package:mlflutter/utils/get_path_to_executable.dart';
 import 'package:mlflutter/widgets/processing_overlay.dart';
 
 class Deface extends ConsumerStatefulWidget {
@@ -79,6 +54,9 @@ class DefaceProcessState extends ConsumerState<Deface> {
   List<File>? inputImages; // List for display when input is a folder
   List<File>? outputImages; // List for display when input is a folder
   String? outputMessage;
+
+  String? _exePath;
+
   final TextEditingController _urlController = TextEditingController();
 
   @override
@@ -422,6 +400,17 @@ class DefaceProcessState extends ConsumerState<Deface> {
     DefaceNotifier notifier,
   ) async {
     if (_isProcessing) return;
+    try {
+      _exePath = await getPathToExecutable('deface');
+      debugPrint('EXECUTABLE PATH $_exePath');
+    } on Exception {
+      // TODO 20240914 THIS NEEDS TO HAVE AN AlertDialog POPUP.
+
+      debugPrint(
+          'PATH TO deface NOT FOUND. Install using `pip install deface`');
+      return;
+    }
+
     if (defaceState.selectedType == 'File' &&
         !isFileImage(defaceState.selectedInputPath!)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -458,7 +447,7 @@ class DefaceProcessState extends ConsumerState<Deface> {
 
       String? escapedFilePath =
           defaceState.selectedInputPath?.replaceAll(' ', '\\ ');
-      String command = 'deface "$escapedFilePath"';
+      String command = '$_exePath "$escapedFilePath"';
 
       // Start the process
       _runningProcess = await Process.start('/bin/sh', ['-c', command]);
