@@ -21,7 +21,14 @@
 ///
 /// Authors: Graham Williams
 
+// TODO 20240915 NOT FINISHED
+
 library;
+
+import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 
@@ -90,13 +97,61 @@ import 'package:mlflutter/features/language/process.dart';
 //
 // >>>
 
-class Ollama extends StatelessWidget {
+class Ollama extends StatefulWidget {
+  @override
+  OllamaState createState() => OllamaState();
+}
+
+class OllamaState extends State<Ollama> {
+  final TextEditingController _controller = TextEditingController();
+  String _output = '';
+
+  static const platform = MethodChannel('ollama');
+
+  Future<void> _runOllamaCommand(String prompt) async {
+    String response;
+    debugPrint('XXXXX');
+    try {
+      final String result =
+          await platform.invokeMethod('runOllamaCommand', prompt);
+      debugPrint(result);
+      response = result;
+    } on PlatformException catch (e) {
+      response = "Failed to run ollama command: '${e.message}'.";
+    }
+
+    setState(() {
+      _output = response;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Theme.of(context).colorScheme.primaryContainer,
-        child: const LanguageProcess(processType: ProcessType.transcribe),
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+              labelText: 'Enter your prompt',
+            ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              _runOllamaCommand(_controller.text);
+            },
+            child: Text('Submit'),
+          ),
+          SizedBox(height: 20),
+          Text('Response:'),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Text(_output),
+            ),
+          ),
+        ],
       ),
     );
   }
