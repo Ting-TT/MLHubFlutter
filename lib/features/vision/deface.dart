@@ -395,6 +395,26 @@ class DefaceProcessState extends ConsumerState<Deface> {
     }
   }
 
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('App Not Found'),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _runDeface(
     DefaceState defaceState,
     DefaceNotifier notifier,
@@ -405,9 +425,7 @@ class DefaceProcessState extends ConsumerState<Deface> {
       debugPrint('EXECUTABLE PATH $_exePath');
     } on Exception {
       // TODO 20240914 THIS NEEDS TO HAVE AN AlertDialog POPUP.
-
-      debugPrint(
-          'PATH TO deface NOT FOUND. Install using `pip install deface`');
+      _showErrorDialog(context, 'Install using `pip install deface`.');
       return;
     }
 
