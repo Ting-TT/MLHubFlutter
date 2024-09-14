@@ -41,6 +41,47 @@ import 'package:mlflutter/features/language/process.dart';
 // Commands are `ollama run codellama` which then prompts for the prompt. On
 // ENTER it starts generating the output. Perhaps use pty/xterm to show the
 // output.
+//
+// EXAMPLE
+//
+// >>> In flutter I want a popup to display when a file does not exist
+//
+// To display a popup in Flutter when a file does not exist, you can use the `showDialog` function from the `material.dart` library and pass in a custom dialog
+// widget as an argument. Here's an example:
+// ```
+// import 'package:flutter/material.dart';
+//
+// class MyWidget extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: Text('My Widget')),
+//       body: Center(
+//         child: ElevatedButton(
+//           onPressed: () async {
+//             final file = File('path/to/file.txt');
+//             if (!await file.exists()) {
+//               showDialog(
+//                 context: context,
+//                 builder: (BuildContext context) => AlertDialog(
+//                   title: Text('Error'),
+//                   content: Text('File not found'),
+//                   actions: [
+//                     FlatButton(
+//                       child: Text('Ok'),
+//                       onPressed: () {
+//                         Navigator.pop(context);
+//                       },
+//                     ),
+//                   ],
+//                 ),
+//               );
+//             } else {
+//               // Do something with the file
+//             }
+//           },
+//
+// >>>
 
 class Ollama extends StatelessWidget {
   @override
