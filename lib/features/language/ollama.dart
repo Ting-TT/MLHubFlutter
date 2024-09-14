@@ -42,6 +42,13 @@ import 'package:mlflutter/features/language/process.dart';
 // ENTER it starts generating the output. Perhaps use pty/xterm to show the
 // output.
 //
+// INSTALL
+//
+// If ollama is not found as a command, then suggest `sudo snap install ollama`
+// or the equivalent on your OS.
+//
+// On furst run it takes a while to download the model (> 3GB).
+//
 // EXAMPLE
 //
 // >>> In flutter I want a popup to display when a file does not exist
