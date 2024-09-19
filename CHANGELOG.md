@@ -7,6 +7,8 @@ numbers.
 
 ## 0.1.0 FUTURE
 
++ Add "ml colorization" to the vision part of the app [0.0.16]
++ Retain states for language functionalities [0.0.15]
 + Add a new functionality "Identify" under "Language" which can identify the language of an audio/video file [0.0.14]
 + Auto-close the Navigation Drawer after choosing the destination [0.0.13]
 + Refactor the long method to improve readability of the codes [0.0.12]
