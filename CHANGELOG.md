@@ -7,6 +7,7 @@ numbers.
 
 ## 0.1.0 FUTURE
 
++ Add "ml identify cars" to the vision part of the app [0.0.17]
 + Add "ml colorization" to the vision part of the app [0.0.16]
 + Retain states for language functionalities [0.0.15]
 + Add a new functionality "Identify" under "Language" which can identify the language of an audio/video file [0.0.14]

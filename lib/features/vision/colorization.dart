@@ -35,6 +35,7 @@ import 'package:path/path.dart' as path;
 import 'package:mlflutter/features/log.dart';
 import 'package:mlflutter/providers/colorization.dart';
 import 'package:mlflutter/utils/check_image.dart';
+import 'package:mlflutter/widgets/conditional_button.dart';
 import 'package:mlflutter/widgets/processing_overlay.dart';
 
 class Colorization extends ConsumerStatefulWidget {
@@ -106,22 +107,14 @@ class ColorizationProcessState extends ConsumerState<Colorization> {
         const SizedBox(height: 14.0),
         buildOutputDirectoryPicker(colorizationState, notifier),
         const SizedBox(height: 20.0),
-        ElevatedButton(
+        ConditionalButton(
           onPressed: colorizationState.selectedInputPath != null &&
                   colorizationState.selectedInputPath!.isNotEmpty
               ? () => _runColorization(colorizationState, notifier)
               : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: colorizationState.selectedInputPath != null &&
-                    colorizationState.selectedInputPath!.isNotEmpty
-                ? null
-                : Colors.grey,
-            foregroundColor: colorizationState.selectedInputPath != null &&
-                    colorizationState.selectedInputPath!.isNotEmpty
-                ? null
-                : Colors.black45,
-          ),
-          child: const Text('Colorize'),
+          text: 'Colorize',
+          isEnabled: colorizationState.selectedInputPath != null &&
+              colorizationState.selectedInputPath!.isNotEmpty,
         ),
         const SizedBox(height: 16.0),
         if (errorOccurred && outputMessage != null)
@@ -429,6 +422,10 @@ class ColorizationProcessState extends ConsumerState<Colorization> {
 
       if (colorizationState.selectedOutputDirectory != null) {
         Directory.current = colorizationState.selectedOutputDirectory!;
+      } else {
+        setState(() {
+          notifier.updateOutputDirectory(Directory.current.path);
+        });
       }
       debugPrint('Current directory: ${Directory.current.path}');
 

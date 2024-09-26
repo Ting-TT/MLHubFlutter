@@ -49,7 +49,7 @@ class PageRouter {
       case 5:
         return Identify();
       case 6:
-        return CarsIdentification();
+        return const CarIdentification();
       default:
         return Intro();
     }

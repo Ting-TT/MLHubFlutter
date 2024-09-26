@@ -44,6 +44,7 @@ import 'package:mlflutter/features/log.dart';
 import 'package:mlflutter/providers/language.dart';
 import 'package:mlflutter/utils/get_file_info.dart';
 import 'package:mlflutter/utils/save_file.dart';
+import 'package:mlflutter/widgets/conditional_button.dart';
 import 'package:mlflutter/widgets/language_selection.dart';
 import 'package:mlflutter/widgets/item_selection.dart';
 import 'package:mlflutter/widgets/file_drop.dart';
@@ -258,16 +259,12 @@ class LanguageProcessState extends ConsumerState<LanguageProcess> {
           child: const Text('Choose File'),
         ),
         const SizedBox(width: 10.0),
-        ElevatedButton(
+        ConditionalButton(
           onPressed: state.droppedFiles.isNotEmpty
               ? () => _runOrNot(ref, state)
               : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: state.droppedFiles.isNotEmpty ? null : Colors.grey,
-            foregroundColor:
-                state.droppedFiles.isNotEmpty ? null : Colors.black45,
-          ),
-          child: const Text('Run'),
+          text: 'Run',
+          isEnabled: state.droppedFiles.isNotEmpty,
         ),
       ],
     );
@@ -278,7 +275,7 @@ class LanguageProcessState extends ConsumerState<LanguageProcess> {
       children: [
         const Text('Output:', style: TextStyle(fontSize: 18)),
         const SizedBox(width: 10.0),
-        ElevatedButton(
+        ConditionalButton(
           onPressed: _outputController.text.isNotEmpty
               ? () async {
                   String defaultFileName =
@@ -296,13 +293,8 @@ class LanguageProcessState extends ConsumerState<LanguageProcess> {
                   }
                 }
               : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor:
-                _outputController.text.isNotEmpty ? null : Colors.grey,
-            foregroundColor:
-                _outputController.text.isNotEmpty ? null : Colors.black45,
-          ),
-          child: const Text('Save'),
+          text: 'Save',
+          isEnabled: _outputController.text.isNotEmpty,
         ),
       ],
     );
