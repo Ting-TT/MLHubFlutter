@@ -323,6 +323,8 @@ class DefaceProcessState extends ConsumerState<Deface> {
   Future<void> _generateOutputImagePath(
     DefaceState defaceState,
   ) async {
+    outputImagePath = path.dirname(defaceState.selectedInputPath!);
+      
     String inputName = path.basename(defaceState.selectedInputPath!);
     List<String> nameParts = inputName.split('.');
     if (nameParts.length > 1) {
@@ -330,20 +332,20 @@ class DefaceProcessState extends ConsumerState<Deface> {
           '${nameParts[nameParts.length - 2]}_anonymized';
       setState(() {
         outputImagePath = path.join(
-          defaceState.selectedOutputDirectory ?? Directory.current.path,
+          outputImagePath!,
           nameParts.join('.'),
         );
       });
     }
 
     // Validation for file or URL after path generation
-    if (outputImagePath == null || !File(outputImagePath!).existsSync()) {
+    if (!File(outputImagePath!).existsSync()) {
       errorOccurred = true;
       outputMessage =
           'URL or file invalid. Please ensure your input is a valid image.';
     } else {
       outputMessage =
-          'Output image(s) successfully saved to: ${defaceState.selectedOutputDirectory}';
+          'Output image(s) successfully saved to: $outputImagePath';
     }
   }
 
@@ -366,7 +368,7 @@ class DefaceProcessState extends ConsumerState<Deface> {
         nameParts[nameParts.length - 2] =
             '${nameParts[nameParts.length - 2]}_anonymized';
         String outputPath = path.join(
-          defaceState.selectedOutputDirectory ?? Directory.current.path,
+          path.dirname(defaceState.selectedInputPath!),
           nameParts.join('.'),
         );
         outputImages!.add(File(outputPath));
@@ -382,7 +384,7 @@ class DefaceProcessState extends ConsumerState<Deface> {
           'Please ensure that the selected folder contains only images.';
     } else {
       outputMessage =
-          'Output image(s) successfully saved to: ${defaceState.selectedOutputDirectory}';
+          'Output image(s) successfully saved to: ${path.dirname(defaceState.selectedInputPath!)}';
     }
   }
 
@@ -465,7 +467,7 @@ class DefaceProcessState extends ConsumerState<Deface> {
 
       String? escapedFilePath =
           defaceState.selectedInputPath?.replaceAll(' ', '\\ ');
-      String command = '$_exePath "$escapedFilePath"';
+      String command = '$_exePath $escapedFilePath';
 
       // Start the process
       _runningProcess = await Process.start('/bin/sh', ['-c', command]);
