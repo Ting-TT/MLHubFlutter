@@ -27,3 +27,12 @@ Convert the content of the input audio/video file into formatted text.
 #### Translation
 Translate the content of the input audio/video file into formatted text. (Note: Currently, only supported to translate to English.)
 ![Translate Language Page](images/TranslateLanguage.png)
+
+### Vision
+#### Colorization
+Colorize black-and-white images from an image input, a folder of images or the URL of an image.
+![Colorization Page](images/Colorization.png)
+
+#### Identify Cars
+Identify the make and model of a car from an image input.
+![Identify Car Page](images/IdentifyCar.png)
