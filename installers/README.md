@@ -17,6 +17,10 @@ pip install mlhub
 mlhub configure
 ml install Ting-TT/openai
 ml configure openai
+ml install mlhubber/colorize
+ml configure colorize
+ml install gitlab:kayontoga/cars
+ml configure cars
 ```
 
 ## Linux tar Archive
@@ -66,6 +70,10 @@ the file and open it on your Mac. Then, holding the Control key click
 on the app icon to display a menu. Choose `Open`. Then accept the
 warning to then run the app. The app should then run without the
 warning next time.
+
+Sometimes when running `ml configure`, you may encounter an error message 
+such as "sudo: apt-get: command not found", which occurs because apt-get is specific to Linux. 
+To resolve this issue, please use `pip install` or `brew install` to install the required dependencies.
 
 ## Windows Installer
 
