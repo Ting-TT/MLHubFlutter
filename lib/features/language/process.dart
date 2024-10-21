@@ -279,7 +279,7 @@ class LanguageProcessState extends ConsumerState<LanguageProcess> {
           onPressed: _outputController.text.isNotEmpty
               ? () async {
                   String defaultFileName =
-                      '${path_lib.basenameWithoutExtension(state.droppedFiles.first.path)}.$state.selectedFormat';
+                      '${path_lib.basenameWithoutExtension(state.droppedFiles.first.path)}.${state.selectedFormat}';
                   String initialDirectory =
                       path_lib.dirname(state.droppedFiles.first.path);
                   String result = await saveToFile(
